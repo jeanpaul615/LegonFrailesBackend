@@ -1,3 +1,5 @@
+/*Este componente corre el servidor, y recibe las rutas, ademas de 
+ desde que puerto se permiten las consultas*/
 const express = require('express')
 const app = express()
 const port = 5000

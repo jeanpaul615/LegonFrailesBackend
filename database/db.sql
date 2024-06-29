@@ -1,3 +1,5 @@
+create database legon;
+use legon;
 
 create table login(
 	username varchar(255) not null,

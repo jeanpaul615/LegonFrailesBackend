@@ -1,8 +1,9 @@
+//Esta función dse encarga de manejar los datos, hace el fetch para consultar a la bd
 import React, { useState } from 'react';
 import Home from './Home';
 import LoginForm from './LoginForm';
 
-export default function Login() {
+export default function LoginController() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginSuccessful, setLoginSuccessful] = useState(false);

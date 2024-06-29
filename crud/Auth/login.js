@@ -1,3 +1,4 @@
+//En el crud se manejan las consultas a la db, y se hacen los callback a los controllers
 const db = require('../../config/db');
 const jwt = require('jsonwebtoken');
 //El modelo se encarga de hacer las consultas
@@ -11,6 +12,7 @@ const Login = {
             }
 
             if (result.length > 0) {
+                //se rea el token y su tiempo de expiración
                 const token = jwt.sign({ username }, "Stack", {
                     expiresIn: '3m'
                 });
