@@ -1,5 +1,5 @@
 //El controlador es el encargado de manejar las respuestas.
-const Login = require('../crud/Auth/login');
+const Login = require('../crud/Auth/Login');
 
 exports.login = (req, res) => {
     const { username, password } = req.body;
