@@ -25,7 +25,7 @@ function Sidebar() {
           />
         </a>
         <div className="mt-36 md:ml-96 md:pl-32">
-        <button className="fixed top-4 right-4 bg-amber-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+        <button className="md:fixed flex justify-left items-left top-4 right-4 mt-2 bg-amber-500 hover:bg-gray-700 text-white font-bold py-1 px-4 rounded">
           AGREGAR MATERIALES
         </button>
         </div>
@@ -62,7 +62,7 @@ function Sidebar() {
           <ul className="space-y-2 font-medium">
             <li>
               <a
-                href="#"
+                href="/"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <svg
@@ -222,6 +222,8 @@ function Sidebar() {
         </div>
       </aside>
     </div>
+    
+    
   );
 }
 
