@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import ModaltoAdd from '../containers/ModaltoAdd';
 import legonbanner from "../assets/legon_banner.png";
 import leon_legon from "../assets/leon_legon.png";
 
 function Sidebar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuTransfer, setmenuTransfer] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -14,6 +16,13 @@ function Sidebar() {
     setmenuTransfer(!menuTransfer);
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className="fixed top-0 left-0 z-40 w-full">
       <div className="border-white border-b-2 bg-slate-800 h-20 items-center flex">
@@ -25,8 +34,11 @@ function Sidebar() {
           />
         </a>
         <div className="mt-36 md:ml-96 md:pl-32">
-        <button className="md:fixed flex justify-left items-left top-4 right-4 mt-2 bg-amber-500 hover:bg-gray-700 text-white font-bold py-1 px-4 rounded">
-          AGREGAR MATERIALES
+
+        <button 
+         onClick={openModal}
+         className="md:fixed flex justify-left items-left top-4 right-4 mt-2 bg-amber-500 hover:bg-gray-700 text-white font-bold py-1 px-4 rounded">
+          AGREGAR MATERIAL NUEVO
         </button>
         </div>
         <div className="flex-1 flex justify-end pr-5">
@@ -221,6 +233,7 @@ function Sidebar() {
           ></div>
         </div>
       </aside>
+      <ModaltoAdd isOpen={isModalOpen} onClose={closeModal} />
     </div>
     
     

@@ -1,4 +1,7 @@
-const Stock = require('../crud/Auth/Stock'); // Ajusta la ruta según sea necesario
+// stockController.js
+
+const db = require('../config/db'); // Ajusta la ruta según sea necesario
+const Stock = require('../crud/Stock/Stock'); // Ajusta la ruta según sea necesario
 
 const StockController = {
   getAllStocks: (req, res) => {
@@ -19,6 +22,7 @@ const StockController = {
       return res.status(400).json({ error: 'Los campos Nombre_material, Cantidad y Estado son requeridos.' });
     }
 
+    // Llama al método de agregar stock en el modelo Stock
     Stock.addStocks({ Nombre_material, Cantidad, Estado }, (err, insertId) => {
       if (err) {
         console.error('Error al insertar stock:', err);
@@ -26,7 +30,7 @@ const StockController = {
       }
       res.status(200).json({ message: 'Stock agregado correctamente', insertId });
     });
-  }
+  },
 };
 
 module.exports = StockController;

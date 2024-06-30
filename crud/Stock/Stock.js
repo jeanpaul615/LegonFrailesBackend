@@ -24,11 +24,6 @@ const StockController = {
   addStocks: (req, res) => {
     const { Nombre_material, Cantidad, Estado } = req.body;
 
-    // Verifica que los datos requeridos no sean nulos
-    if (!Nombre_material || !Cantidad || !Estado) {
-      return res.status(400).json({ error: 'Los campos Nombre_material, Cantidad y Estado son requeridos.' });
-    }
-
     const query = 'INSERT INTO stocksistema(Nombre_material, Cantidad, Estado) VALUES (?, ?, ?)';
     db.query(query, [Nombre_material, Cantidad, Estado], (err, result) => {
       if (err) {
@@ -39,5 +34,8 @@ const StockController = {
     });
   }
 };
+
+
+
 
 module.exports = StockController;

@@ -1,24 +1,20 @@
-/*Este componente corre el servidor, y recibe las rutas, ademas de 
- desde que puerto se permiten las consultas*/
-const express = require('express')
-const app = express()
-const port = 5000
-const routesAuth = require('./routes/authRoutes')
-const routesStock = require('./routes/authRoutes')
-
+const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
-
-app.use(express.json());
-
-app.use(express.urlencoded({ extended: true }));
-
+const app = express();
+const port = 5000;
 app.use(cors());
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
+// Rutas para autenticación y stocks (ajusta las rutas según sea necesario)
+const routesAuth = require('./routes/authRoutes');
+const routesStock = require('./routes/authRoutes'); // Ajusta la ruta de stockRoutes según sea necesario
 
 app.use('/', routesAuth);
 app.use('/stock', routesStock);
 
-
-
 app.listen(port, () => {
-    console.log(`app listening on port ${port}`)
-})
+    console.log(`App listening on port ${port}`);
+});

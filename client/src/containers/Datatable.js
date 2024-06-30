@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import $ from 'jquery';
 import 'datatables.net-dt';
 import 'datatables.net-dt/css/dataTables.dataTables.min.css';
-import { fetchStocks } from '../controllers/Datatable'; // Ajusta la ruta según sea necesario
+import { fetchStocks } from '../controllers/Datatable'; 
 
 const DatatableComponent = () => {
   const [stocks, setStocks] = useState([]);
