@@ -22,10 +22,10 @@ export const addStock = async (stockData) => {
     }
 
     const data = await response.json();
-    Swal.fire("Material agregado exitosamente.");
+    window.location.reload();
     return data;
   } catch (error) {
     console.error('Error al agregar el stock:', error);
-    throw error; // Propaga el error para ser manejado en un nivel superior
+    throw error; 
   }
 };

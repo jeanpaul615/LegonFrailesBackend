@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ModaltoAdd from '../containers/ModaltoAdd';
+import ModaltoAdd from './StockSistema/ModaltoAdd';
 import legonbanner from "../assets/legon_banner.png";
 import leon_legon from "../assets/leon_legon.png";
 
@@ -118,7 +118,7 @@ function Sidebar() {
                 <li>
                   <a
                     href="/sub-opcion-1"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    className="flex items-center p-2 text-gray-900 rounded-lg italic dark:text-white hover:bg-gray-100 hover:text-black bg-gray-700 group"
                   >
                     Tecnico a Contrato
                   </a>
@@ -126,7 +126,7 @@ function Sidebar() {
                 <li>
                   <a
                     href="/sub-opcion-2"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    className="flex items-center p-2 text-gray-900 rounded-lg italic dark:text-white hover:bg-gray-100 hover:text-black bg-gray-700 group"
                   >
                     Tecnico a Sistema
                   </a>
@@ -134,7 +134,7 @@ function Sidebar() {
                 <li>
                   <a
                     href="/sub-opcion-3"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    className="flex items-center p-2 text-gray-900 rounded-lg italic dark:text-white hover:bg-gray-100 hover:text-black bg-gray-700 group"
                   >
                     Entre Sedes
                   </a>

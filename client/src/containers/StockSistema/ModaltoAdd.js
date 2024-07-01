@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addStock } from "../controllers/addStock"; // Ajusta la ruta según sea necesario
+import { addStock } from "../../controllers/addStock"; // Ajusta la ruta según sea necesario
 
 function ModaltoAdd({ isOpen, onClose }) {
   const [materialData, setMaterialData] = useState({
