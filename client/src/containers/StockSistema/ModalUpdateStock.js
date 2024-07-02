@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { updateStock } from '../../controllers/Datatable'; // Importa las funciones de la API para actualizar y eliminar stocks
 
-export default function ModalUpdateStock({ onClose }) {
+export default function ModalUpdateStock({ onClose, onSave, Id_stocksistema, Nombre_material: initialNombre, Cantidad: initialCantidad, Estado: initialEstado }) {
   const [Nombre_material, setNombre_material] = useState('');
   const [Cantidad, setCantidad] = useState(0);
   const [Estado, setEstado] = useState('');
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    setNombre_material(initialNombre);
+    setCantidad(initialCantidad || 0);
+    setEstado(initialEstado);
+  }, [initialNombre, initialCantidad, initialEstado]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Aquí puedes manejar la lógica para guardar los datos del formulario
-    // Por ejemplo, puedes enviar estos datos a una función de guardado o API
-
-    // Después de guardar, cierra el modal
-    onClose();
+    try {
+      await updateStock(Id_stocksistema, Nombre_material, Cantidad, Estado); 
+      onSave(); // Ejecuta la función onSave después de actualizar
+      onClose(); // Cierra el modal
+    } catch (error) {
+      console.error('Error al actualizar el stock:', error);
+      // Aquí puedes manejar el error, como mostrar un mensaje al usuario
+    }
   };
 
   return (
@@ -58,8 +67,8 @@ export default function ModalUpdateStock({ onClose }) {
             />
           </div>
           <div className="flex justify-end">
-            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-              Agregar
+            <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">
+              Actualizar
             </button>
             <button type="button" className="px-4 py-2 ml-4 bg-gray-300 text-gray-700 rounded hover:bg-gray-400" onClick={onClose}>
               Cancelar

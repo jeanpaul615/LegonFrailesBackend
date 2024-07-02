@@ -5,15 +5,17 @@ import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-import ModalUpdateStock from './ModalUpdateStock'; // Ajusta la ruta según la ubicación de tu componente
-import { fetchStocks } from '../../controllers/Datatable';
+import ModalUpdateStock from './ModalUpdateStock';
+import { fetchStocks, deleteStock } from '../../controllers/Datatable';
+import Swal from 'sweetalert2';
 
 const DatatableComponent = () => {
   const [stocks, setStocks] = useState([]);
-  const [selectedStock, setSelectedStock] = useState(null); // Estado para almacenar el stock seleccionado
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar la visibilidad del modal
+  const [selectedStock, setSelectedStock] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const tableRef = useRef(null);
+  const dataTable = useRef(null); // Ref to store DataTable instance
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,35 +32,105 @@ const DatatableComponent = () => {
 
   useEffect(() => {
     if ($.fn.DataTable && stocks.length > 0) {
-      const dataTable = $(tableRef.current).DataTable({
+      // Initialize DataTable
+      dataTable.current = $(tableRef.current).DataTable({
         data: stocks,
         columns: [
           { title: 'ID', data: 'Id_stocksistema' },
           { title: 'Material', data: 'Nombre_material' },
           { title: 'Cantidad', data: 'Cantidad' },
-          { title: 'Estado', data: 'Estado' }
+          { title: 'Estado', data: 'Estado' },
+          {
+            title: 'Opciones',
+            data: null,
+            render: function (data, type, row) {
+              return `
+                <button class="update-btn text-blue-600 hover:text-blue-900 font-bold">Actualizar</button>
+                <button class="delete-btn text-red-600 hover:text-red-900 font-bold ml-4">Eliminar</button>
+              `;
+            }
+          }
         ],
         paging: true,
         searching: true,
-        info: true,
-        lengthMenu: [5, 10, 25, 50, 100, 1000, 10000],
         responsive: true,
+        info: true,
+        lengthMenu: [5, 10, 25, 50, 100, 1000],
         autoWidth: true
       });
 
-      // Manejar el clic en una fila para abrir el modal
-      $(tableRef.current).on('click', 'tbody tr', function() {
-        const rowData = dataTable.row(this).data();
-        setSelectedStock(rowData); // Guardar los datos del stock seleccionado
-        setIsModalOpen(true); // Abrir el modal al hacer clic en la fila
+      // Event listeners for buttons in DataTable
+      $(tableRef.current).on('click', '.update-btn', function() {
+        const rowData = dataTable.current.row($(this).parents('tr')).data();
+        setSelectedStock(rowData);
+        setIsModalOpen(true);
       });
 
-      // Limpiar DataTable al desmontar el componente para evitar memory leaks
+      $(tableRef.current).on('click', '.delete-btn', function() {
+        const rowData = dataTable.current.row($(this).parents('tr')).data();
+        handleDelete(rowData.Id_stocksistema);
+      });
+
       return () => {
-        dataTable.destroy();
+        // Cleanup: Destroy DataTable instance
+        if (dataTable.current) {
+          dataTable.current.destroy(true); // true: Remove from DOM
+        }
       };
     }
   }, [stocks]);
+
+  const handleDelete = async (Id_stocksistema) => {
+    // Use SweetAlert2 for confirmation
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás revertir esto',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminarlo',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteStock(Id_stocksistema);
+          setStocks(prevStocks => prevStocks.filter(stock => stock.Id_stocksistema !== Id_stocksistema));
+          Swal.fire(
+            '¡Eliminado!',
+            'El archivo ha sido eliminado.',
+            'success',
+          );
+          window.location.reload();
+        } catch (error) {
+          console.error('Error al eliminar el stock:', error);
+          Swal.fire(
+            'Error',
+            'Hubo un problema al intentar eliminar el archivo.',
+            'error'
+          );
+        }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire(
+          'Cancelado',
+          'Tu material no fue eliminado',
+          'error'
+        );
+      }
+    });
+  };
+
+  const handleUpdate = async (Id_stocksistema, Nombre_material, Cantidad, Estado) => {
+    try {
+      setStocks(prevStocks =>
+        prevStocks.map(stock =>
+          stock.Id_stocksistema === Id_stocksistema ? { ...stock, Nombre_material, Cantidad, Estado } : stock
+        )
+      );
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error al actualizar el stock:', error);
+    }
+  };
 
   const handlePrintPDF = () => {
     const doc = new jsPDF();
@@ -96,11 +168,12 @@ const DatatableComponent = () => {
             <th scope="col">Material</th>
             <th scope="col">Cantidad</th>
             <th scope="col">Estado</th>
+            <th scope="col">Opciones</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200">
-          {stocks.map(stock => (
-            <tr key={stock.Id_stocksistema} className="hover:bg-gray-100 cursor-pointer">
+        <tbody>
+          {stocks.map((stock) => (
+            <tr key={stock.Id_stocksistema}>
               <td>{stock.Id_stocksistema}</td>
               <td>{stock.Nombre_material}</td>
               <td>{stock.Cantidad}</td>
@@ -109,15 +182,13 @@ const DatatableComponent = () => {
           ))}
         </tbody>
       </table>
-      
-      {/* Modal para actualizar stock */}
+
       {isModalOpen && selectedStock && (
         <ModalUpdateStock
-          key={selectedStock.Id_stocksistema} // Asegura la renderización del modal al cambiar el stock seleccionado
-          Nombre_material={selectedStock.Nombre_material}
-          Cantidad={selectedStock.Cantidad}
-          Estado={selectedStock.Estado}
+          key={selectedStock.Id_stocksistema}
           onClose={handleCloseModal}
+          {...selectedStock}
+          onSave={handleUpdate}
         />
       )}
     </div>

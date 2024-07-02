@@ -1,5 +1,3 @@
-// stockController.js
-
 const Stock = require('../crud/Stock/Stock');
 
 const StockController = {
@@ -17,12 +15,10 @@ const StockController = {
   addStock: (req, res) => {
     const { Nombre_material, Cantidad, Estado } = req.body;
 
-    // Verifica que los datos requeridos no sean nulos
     if (!Nombre_material || !Cantidad || !Estado) {
       return res.status(400).json({ error: 'Los campos Nombre_material, Cantidad y Estado son requeridos.' });
     }
 
-    // Llama al método para agregar stock en el modelo Stock
     Stock.addStocks(Nombre_material, Cantidad, Estado, (err, result) => {
       if (err) {
         console.error('Error al insertar stock:', err);
@@ -31,6 +27,35 @@ const StockController = {
       res.status(200).json({ message: 'Stock agregado correctamente', insertId: result.insertId });
     });
   },
+
+  deleteStock: (req, res) => {
+    const { id } = req.params;
+
+    Stock.deleteStock(id, (err) => {
+      if (err) {
+        console.error('Error al eliminar stock:', err);
+        return res.status(500).json({ error: 'Error interno al eliminar stock' });
+      }
+      res.status(200).json({ message: 'Stock eliminado correctamente' });
+    });
+  },
+
+  updateStock: (req, res) => {
+    const { Id_stocksistema } = req.params;
+    const { Nombre_material, Cantidad, Estado } = req.body;
+
+    if (!Nombre_material || !Cantidad || !Estado) {
+      return res.status(400).json({ error: 'Los campos Nombre_material, Cantidad y Estado son requeridos.' });
+    }
+
+    Stock.updateStock(Id_stocksistema, Nombre_material, Cantidad, Estado, (err) => {
+      if (err) {
+        console.error('Error al actualizar stock:', err);
+        return res.status(500).json({ error: 'Error interno al actualizar stock' });
+      }
+      res.status(200).json({ message: 'Stock actualizado correctamente' });
+    });
+  }
 };
 
 module.exports = StockController;

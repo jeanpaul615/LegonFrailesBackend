@@ -35,6 +35,15 @@ const StockController = {
       }
       callback(null, { message: 'Stock agregado correctamente', insertId: result.insertId });
     });
+  },
+  deleteStock: (Id_stocksistema, callback) => {
+    const query = 'DELETE FROM stocksistema WHERE Id_stocksistema = ?';
+    db.query(query, [Id_stocksistema], callback);
+  },
+
+  updateStock: (Id_stocksistema, Nombre_material, Cantidad, Estado, callback) => {
+    const query = 'UPDATE stocksistema SET Nombre_material = ?, Cantidad = ?, Estado = ? WHERE Id_stocksistema = ?';
+    db.query(query, [Nombre_material, Cantidad, Estado, Id_stocksistema], callback);
   }
 };
 
