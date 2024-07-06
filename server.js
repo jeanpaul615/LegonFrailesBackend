@@ -12,11 +12,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Rutas para autenticación y stocks
 const routesAuth = require('./routes/authRoutes');
-const routesStock = require('./routes/authRoutes'); // Corregido el nombre de la ruta para stocks
-
+const routesStock = require('./routes/authRoutes'); 
+const routesStockTechnique = require('./routes/authRoutes');
+const routesTechnique = require('./crud/StockTechnique/techniques') 
 app.use('/', routesAuth);
 app.use('/stock', routesStock); // Monta las rutas de stocks bajo el prefijo '/stock'
-
+app.use('/stocktechnique',routesStockTechnique);
+app.use('/technique',routesTechnique);
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);
 });

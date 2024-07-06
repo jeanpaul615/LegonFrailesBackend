@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addStock } from "../../controllers/addStock"; // Ajusta la ruta según sea necesario
+import { addStock } from "../../controllers/StockSistema/addStock"; // Ajusta la ruta según sea necesario
 
 function ModaltoAdd({ isOpen, onClose }) {
   const [materialData, setMaterialData] = useState({
@@ -50,7 +50,7 @@ function ModaltoAdd({ isOpen, onClose }) {
               name="Nombre_material"
               value={materialData.Nombre_material}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required
             />
           </div>
           <div className="mb-4">
@@ -62,7 +62,7 @@ function ModaltoAdd({ isOpen, onClose }) {
               name="Cantidad"
               value={materialData.Cantidad}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required
             />
           </div>
           <div className="mb-4">
@@ -74,7 +74,7 @@ function ModaltoAdd({ isOpen, onClose }) {
               name="Estado"
               value={materialData.Estado}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required
             />
           </div>
           <div className="flex justify-end space-x-2">

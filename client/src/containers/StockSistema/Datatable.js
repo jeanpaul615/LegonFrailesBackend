@@ -5,52 +5,48 @@ import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-import ModalUpdateStock from './ModalUpdateStock';
-import { fetchStocks, deleteStock } from '../../controllers/Datatable';
-import Swal from 'sweetalert2';
 
-const DatatableComponent = () => {
-  const [stocks, setStocks] = useState([]);
-  const [selectedStock, setSelectedStock] = useState(null);
+const DatatableContainer = ({ columns, fetchData, modalComponent: ModalComponent, title, isAdmin }) => {
+  const [data, setData] = useState([]);
+  const [selectedData, setSelectedData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const tableRef = useRef(null);
-  const dataTable = useRef(null); // Ref to store DataTable instance
+  const dataTable = useRef(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const loadData = async () => {
       try {
-        const stocksData = await fetchStocks();
-        setStocks(stocksData);
+        const fetchedData = await fetchData();
+        setData(fetchedData);
       } catch (error) {
-        console.error('Error fetching stocks:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
-    fetchData();
-  }, []);
+    loadData();
+  }, [fetchData]);
 
   useEffect(() => {
-    if ($.fn.DataTable && stocks.length > 0) {
-      // Initialize DataTable
-      dataTable.current = $(tableRef.current).DataTable({
-        data: stocks,
-        columns: [
-          { title: 'ID', data: 'Id_stocksistema' },
-          { title: 'Material', data: 'Nombre_material' },
-          { title: 'Cantidad', data: 'Cantidad' },
-          { title: 'Estado', data: 'Estado' },
-          {
-            title: 'Opciones',
-            data: null,
-            render: function (data, type, row) {
-              return `
-                <button class="update-btn text-blue-600 hover:text-blue-900 font-bold">Actualizar</button>
-                <button class="delete-btn text-red-600 hover:text-red-900 font-bold ml-4">Eliminar</button>
-              `;
-            }
+    if ($.fn.DataTable && data.length > 0) {
+      if (dataTable.current) {
+        dataTable.current.destroy(true);
+      }
+
+      const columnsWithOptions = isAdmin ? [
+        ...columns,
+        {
+          title: 'Opciones',
+          data: null,
+          render: function (data, type, row) {
+            return '<button class="update-btn text-blue-600 hover:text-blue-900 font-bold">Actualizar</button>';
           }
-        ],
+        }
+      ] : columns;
+
+      dataTable.current = $(tableRef.current).DataTable({
+        data,
+        columns: columnsWithOptions,
         paging: true,
         searching: true,
         responsive: true,
@@ -59,95 +55,59 @@ const DatatableComponent = () => {
         autoWidth: true
       });
 
-      // Event listeners for buttons in DataTable
-      $(tableRef.current).on('click', '.update-btn', function() {
+      $(tableRef.current).on('click', '.update-btn', function () {
         const rowData = dataTable.current.row($(this).parents('tr')).data();
-        setSelectedStock(rowData);
+        setSelectedData(rowData);
         setIsModalOpen(true);
       });
 
-      $(tableRef.current).on('click', '.delete-btn', function() {
-        const rowData = dataTable.current.row($(this).parents('tr')).data();
-        handleDelete(rowData.Id_stocksistema);
-      });
-
       return () => {
-        // Cleanup: Destroy DataTable instance
         if (dataTable.current) {
-          dataTable.current.destroy(true); // true: Remove from DOM
+          dataTable.current.destroy(true);
         }
       };
     }
-  }, [stocks]);
+  }, [data, columns, isAdmin]);
 
-  const handleDelete = async (Id_stocksistema) => {
-    // Use SweetAlert2 for confirmation
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'No podrás revertir esto',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminarlo',
-      cancelButtonText: 'Cancelar',
-      reverseButtons: true
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteStock(Id_stocksistema);
-          setStocks(prevStocks => prevStocks.filter(stock => stock.Id_stocksistema !== Id_stocksistema));
-          Swal.fire(
-            '¡Eliminado!',
-            'El archivo ha sido eliminado.',
-            'success',
-          );
-          window.location.reload();
-        } catch (error) {
-          console.error('Error al eliminar el stock:', error);
-          Swal.fire(
-            'Error',
-            'Hubo un problema al intentar eliminar el archivo.',
-            'error'
-          );
-        }
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire(
-          'Cancelado',
-          'Tu material no fue eliminado',
-          'error'
+  const handleUpdate = async (updatedData) => {
+    try {
+      if (isAdmin) {
+        // Lógica específica para actualizar datos de StockSistema
+        setData(prevData =>
+          prevData.map(item =>
+            item.Id_stocksistema === updatedData.Id_stocksistema ? updatedData : item
+          )
+        );
+      } else {
+        // Lógica específica para actualizar datos de StockTecnico (si es diferente)
+        setData(prevData =>
+          prevData.map(item =>
+            item.Id_stocktecnico === updatedData.Id_stocktecnico ? updatedData : item
+          )
         );
       }
-    });
-  };
-
-  const handleUpdate = async (Id_stocksistema, Nombre_material, Cantidad, Estado) => {
-    try {
-      setStocks(prevStocks =>
-        prevStocks.map(stock =>
-          stock.Id_stocksistema === Id_stocksistema ? { ...stock, Nombre_material, Cantidad, Estado } : stock
-        )
-      );
       setIsModalOpen(false);
     } catch (error) {
-      console.error('Error al actualizar el stock:', error);
+      console.error('Error updating data:', error);
     }
   };
 
   const handlePrintPDF = () => {
     const doc = new jsPDF();
     doc.autoTable({ html: '#datatable' });
-    doc.save('inventario.pdf');
+    doc.save('data.pdf');
   };
 
   const handleExportExcel = () => {
     const workbook = XLSX.utils.book_new();
     const ws = XLSX.utils.table_to_sheet(document.getElementById('datatable'));
-    XLSX.utils.book_append_sheet(workbook, ws, 'Hoja1');
-    XLSX.writeFile(workbook, 'inventario.xlsx');
+    XLSX.utils.book_append_sheet(workbook, ws, 'Sheet1');
+    XLSX.writeFile(workbook, 'data.xlsx');
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedStock(null);
+    setSelectedData(null);
   };
 
   return (
@@ -160,34 +120,37 @@ const DatatableComponent = () => {
           Exportar a Excel
         </button>
       </div>
-      <h1 className="text-center text-2xl font-bold mr-28">MATERIALES DEL SISTEMA</h1>
+      <h1 className="text-center text-2xl font-bold mr-28">{title}</h1>
       <table id="datatable" ref={tableRef} className="table-auto w-auto">
         <thead className="bg-gray-800 text-white">
           <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Material</th>
-            <th scope="col">Cantidad</th>
-            <th scope="col">Estado</th>
-            <th scope="col">Opciones</th>
+            {columns.map((column, index) => (
+              <th key={index} scope="col">{column.title}</th>
+            ))}
+            {isAdmin && <th scope="col">Opciones</th>}
           </tr>
         </thead>
         <tbody>
-          {stocks.map((stock) => (
-            <tr key={stock.Id_stocksistema}>
-              <td>{stock.Id_stocksistema}</td>
-              <td>{stock.Nombre_material}</td>
-              <td>{stock.Cantidad}</td>
-              <td>{stock.Estado}</td>
+          {data.map((item) => (
+            <tr key={isAdmin ? item.Id_stocksistema : item.Id_stocktecnico}> {/* Usar la clave adecuada para cada tipo */}
+              {columns.map((column, colIndex) => (
+                <td key={`${isAdmin ? item.Id_stocksistema : item.Id_stocktecnico}-${colIndex}`}>{item[column.data]}</td>
+              ))}
+              {isAdmin && (
+                <td>
+                  <button className="update-btn text-blue-600 hover:text-blue-900 font-bold">Actualizar</button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
 
-      {isModalOpen && selectedStock && (
-        <ModalUpdateStock
-          key={selectedStock.Id_stocksistema}
+      {isModalOpen && selectedData && (
+        <ModalComponent
+          key={isAdmin ? selectedData.Id_stocksistema : selectedData.Id_stocktecnico} // Asegúrate de que sea único y constante
           onClose={handleCloseModal}
-          {...selectedStock}
+          {...selectedData}
           onSave={handleUpdate}
         />
       )}
@@ -195,4 +158,4 @@ const DatatableComponent = () => {
   );
 };
 
-export default DatatableComponent;
+export default DatatableContainer;

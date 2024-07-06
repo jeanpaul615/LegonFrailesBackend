@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { updateStock } from '../../controllers/Datatable'; // Importa las funciones de la API para actualizar y eliminar stocks
-
+import { updateStock } from '../../controllers/StockSistema/Datatable'; // Importa las funciones de la API para actualizar y eliminar stocks
 export default function ModalUpdateStock({ onClose, onSave, Id_stocksistema, Nombre_material: initialNombre, Cantidad: initialCantidad, Estado: initialEstado }) {
   const [Nombre_material, setNombre_material] = useState('');
   const [Cantidad, setCantidad] = useState(0);
