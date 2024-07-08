@@ -21,12 +21,14 @@ const routesAuth = require('./routes/authRoutes');
 const routesStock = require('./routes/stockRoutes');
 const routesStockTechnique = require('./routes/stocktechniqueRoutes');
 const tecnicoRoutes = require('./routes/tecnicoRoutes');
+const devolucionRoutes = require('./routes/devolucion');
 
 // Usa las rutas
 app.use('/', routesAuth);
 app.use('/stock', routesStock);
 app.use('/stocktechnique', routesStockTechnique);
 app.use('/tecnico', tecnicoRoutes);
+app.use('/devolucion', devolucionRoutes);
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);

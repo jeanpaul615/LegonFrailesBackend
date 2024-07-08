@@ -1,27 +1,38 @@
 import React from 'react';
 import DatatableContainer from '../../containers/StockSistema/Datatable';
-import { fetchStocks } from '../../controllers/StockSistema/Datatable';
+import { fetchDevolucion } from '../../controllers/Devolucion/Datatable';
 import Sidebar from '../../containers/Sidebar';
+import ModaltoAdd from './ModaltoAdd';
 
 const columns = [
   { title: 'ID', data: 'Id_devolucion' },
   { title: 'N° Remision', data: 'Remision' },
-  { title: 'Cantidad', data: 'Cantidad' },
   { title: 'Nombre del Material', data: 'Nombre_material' },
-  { title: 'Fecha', data: 'Fecha de Devolucion' }
+  { title: 'Cantidad', data: 'Cantidad' },
+  { 
+    title: 'Fecha de Devolucion', 
+    data: 'Fecha',
+    render: (data) => {
+      // Assuming data is a timestamp, you can format it to dd/mm/yyyy
+      const dateObject = new Date(data);
+      const formattedDate = `${dateObject.getDate()}/${dateObject.getMonth() + 1}/${dateObject.getFullYear()}`;
+      return formattedDate;
+    }
+  }
 ];
 
-const StocksTable = () => (
+const DevolucionTable = () => (
   <>
     <Sidebar />
     <DatatableContainer
       columns={columns}
-      fetchData={fetchStocks}
-      modalComponent={null} 
-      title="MATERIALES DEL SISTEMA"
+      fetchData={fetchDevolucion}
+      modalComponent={ModaltoAdd} 
+      TextoButton={"Registrar Devolución"}
+      title="DEVOLUCIONES"
       isAdmin={false}
     />
   </>
 );
 
-export default StocksTable;
+export default DevolucionTable;
