@@ -4,7 +4,7 @@ export const addStock = async (stockData) => {
   console.log(stockData);
 
   try {
-    const response = await fetch('http://localhost:5000/stock/add-stocksistema', {
+    const response = await fetch('http://localhost:5000/add-stocksistema', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -12,7 +12,7 @@ export const addStock = async (stockData) => {
       body: JSON.stringify({
         Nombre_material: stockData.Nombre_material,
         Cantidad: stockData.Cantidad,
-        Estado: stockData.Estado
+        Estado: stockData.Estado  
       })
     });
 

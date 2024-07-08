@@ -1,4 +1,4 @@
-const Stock = require('../crud/StockTechnique/Stocktechnique');
+const Stock = require('../Models/StockTechnique/Stocktechnique');
 
 const TechniqueController = {
   getAllTechniques: (req, res) => {
@@ -13,25 +13,50 @@ const TechniqueController = {
   },
 
   addTechnique: (req, res) => {
-    const { cedula, nombreTecnico, nombreMaterial, cantidad, fechaModificacion } = req.body;
+    const { Nombre_tecnico, Nombre_material, Cantidad } = req.body;
 
-    if (!cedula || !nombreTecnico || !nombreMaterial || !cantidad || !fechaModificacion) {
-      return res.status(400).json({ error: 'Los campos cedula, nombreTecnico, nombreMaterial, cantidad y fechaModificacion son requeridos.' });
+    // Verificar los campos requeridos
+    if (!Nombre_tecnico || !Nombre_material || !Cantidad) {
+      return res.status(400).json({ error: 'Los campos Nombre_tecnico, Nombre_material, Cantidad son requeridos.' });
     }
 
-    Stock.addStock(cedula, nombreTecnico, nombreMaterial, cantidad, fechaModificacion, (err, result) => {
+    // Obtener la fecha actual
+    const Fecha_modificacion = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+    // Verificar si ya existe un registro con el mismo nombre_material y nombre_tecnico
+    Stock.getByNombreMaterialAndTecnico(Nombre_material, Nombre_tecnico, (err, existingTechnique) => {
       if (err) {
-        console.error('Error al agregar técnica:', err);
-        return res.status(500).json({ error: 'Error interno al agregar técnica' });
+        console.error('Error al verificar existencia de la técnica:', err);
+        return res.status(500).json({ error: 'Error interno al verificar existencia de la técnica' });
       }
-      res.status(200).json({ message: 'Técnica agregada correctamente', insertId: result.insertId });
+
+      if (existingTechnique) {
+        // Si existe, sumar la cantidad
+        const nuevaCantidad = existingTechnique.Cantidad + parseInt(Cantidad);
+        Stock.updateTechnique(existingTechnique.Id_stocktecnico, Nombre_material, nuevaCantidad, Fecha_modificacion, (err) => {
+          if (err) {
+            console.error('Error al actualizar técnica existente:', err);
+            return res.status(500).json({ error: 'Error interno al actualizar técnica existente' });
+          }
+          res.status(200).json({ message: 'Técnica actualizada correctamente', existingId: existingTechnique.Id_stocktecnico });
+        });
+      } else {
+        // Si no existe, agregar como nuevo
+        Stock.addTechnique(Nombre_tecnico, Nombre_material, Cantidad, Fecha_modificacion, (err, result) => {
+          if (err) {
+            console.error('Error al agregar técnica nueva:', err);
+            return res.status(500).json({ error: 'Error interno al agregar técnica nueva' });
+          }
+          res.status(200).json({ message: 'Técnica agregada correctamente', insertId: result.insertId });
+        });
+      }
     });
   },
 
   deleteTechnique: (req, res) => {
     const { id } = req.params;
 
-    Stock.deleteStock(id, (err) => {
+    Stock.deleteTechnique(id, (err) => {
       if (err) {
         console.error('Error al eliminar técnica:', err);
         return res.status(500).json({ error: 'Error interno al eliminar técnica' });
@@ -42,13 +67,13 @@ const TechniqueController = {
 
   updateTechnique: (req, res) => {
     const { id } = req.params;
-    const { nombreMaterial, cantidad, fechaModificacion } = req.body;
-
-    if (!nombreMaterial || !cantidad || !fechaModificacion) {
-      return res.status(400).json({ error: 'Los campos nombreMaterial, cantidad y fechaModificacion son requeridos.' });
+    const { Nombre_material, Cantidad, Fecha_modificacion } = req.body;
+  
+    if (!Nombre_material || !Cantidad || !Fecha_modificacion) {
+      return res.status(400).json({ error: 'Los campos Nombre_material, Cantidad y Fecha_modificacion son requeridos.' });
     }
-
-    Stock.updateStock(id, nombreMaterial, cantidad, fechaModificacion, (err) => {
+  
+    Stock.updateTechnique(id, Nombre_material, Cantidad, Fecha_modificacion, (err) => {
       if (err) {
         console.error('Error al actualizar técnica:', err);
         return res.status(500).json({ error: 'Error interno al actualizar técnica' });
@@ -56,6 +81,7 @@ const TechniqueController = {
       res.status(200).json({ message: 'Técnica actualizada correctamente' });
     });
   }
+  
 };
 
 module.exports = TechniqueController;

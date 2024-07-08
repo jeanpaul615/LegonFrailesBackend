@@ -1,8 +1,5 @@
-// StocksTable.js
-
 import React from 'react';
 import DatatableContainer from '../../containers/StockSistema/Datatable';
-import ModalUpdateStock from '../../containers/StockSistema/ModalUpdateStock';
 import { fetchStocks } from '../../controllers/StockSistema/Datatable';
 import Sidebar from '../../containers/Sidebar';
 
@@ -19,9 +16,9 @@ const StocksTable = () => (
     <DatatableContainer
       columns={columns}
       fetchData={fetchStocks}
-      modalComponent={ModalUpdateStock}
+      modalComponent={null} 
       title="MATERIALES DEL SISTEMA"
-      isAdmin={false} // Assuming isAdmin should be true here
+      isAdmin={false}
     />
   </>
 );

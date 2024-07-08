@@ -1,4 +1,4 @@
-const Login = require('../crud/Auth/Login');
+const Login = require('../Models/Auth/Login');
 
 exports.login = (req, res) => {
     const { username, password } = req.body;

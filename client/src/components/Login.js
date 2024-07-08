@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Home from './Home';
+import StockTable from '../components/Stocksistema/DatatableStockSistema';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -56,7 +56,7 @@ export default function Login() {
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Inicia sesión en tu cuenta</h2>
         </div>
-        {loginSuccessful ? <Home />:
+        {loginSuccessful ? <StockTable />:
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <input type="hidden" name="remember" defaultValue="true" />
           <div className="rounded-md shadow-sm -space-y-px">

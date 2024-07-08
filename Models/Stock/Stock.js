@@ -44,7 +44,22 @@ const StockController = {
   updateStock: (Id_stocksistema, Nombre_material, Cantidad, Estado, callback) => {
     const query = 'UPDATE stocksistema SET Nombre_material = ?, Cantidad = ?, Estado = ? WHERE Id_stocksistema = ?';
     db.query(query, [Nombre_material, Cantidad, Estado, Id_stocksistema], callback);
-  }
+  },
+  getCantidadByNombreMaterial: (Nombre_material, callback) => {
+    const query = 'SELECT Cantidad FROM stocksistema WHERE Nombre_material = ?';
+    db.query(query, [Nombre_material], (err, results) => {
+        if (err) {
+            callback(err, null);
+            return;
+        }
+
+        if (results.length === 0) {
+            callback(null, null); // No se encontró ningún stock con ese Nombre_material
+        } else {
+            callback(null, results[0].Cantidad);
+        }
+    });
+},
 };
 
 module.exports = StockController;

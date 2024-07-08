@@ -1,19 +1,23 @@
 import React from 'react';
 import DatatableContainer from '../../containers/StockSistema/Datatable';
-import ModalUpdateStock from '../../containers/StockSistema/ModalUpdateStock';
 import { fetchTechniques } from '../../controllers/StockTechnique/Datatable';
 import Sidebar from '../../containers/Sidebar';
-import { format } from 'date-fns';
+import ModaltoAdd from './ModaltoAdd';
 
 const columns = [
-  { title: 'Id', data: 'id' },
-  { title: 'Nombre Material', data: 'nombreMaterial' },
-  { title: 'Nombre Técnico', data: 'nombreTecnico' },
-  { title: 'Cantidad', data: 'cantidad' },
+  { title: 'Id', data: 'Id_stocktecnico' },
+  { title: 'Nombre Material', data: 'Nombre_material' },
+  { title: 'Nombre Técnico', data: 'Nombre_tecnico' },
+  { title: 'Cantidad', data: 'Cantidad' },
   { 
     title: 'Fecha de Modificación', 
-    data: 'fechaModificacion',
-    render: (date) => format(new Date(date), 'dd/MM/yyyy') // Formato dd/mm/aaaa
+    data: 'Fecha_modificacion',
+    render: (data) => {
+      // Assuming data is a timestamp, you can format it to dd/mm/yyyy
+      const dateObject = new Date(data);
+      const formattedDate = `${dateObject.getDate()}/${dateObject.getMonth() + 1}/${dateObject.getFullYear()}`;
+      return formattedDate;
+    }
   }
 ];
 
@@ -23,9 +27,10 @@ const TechnicalTable = () => (
     <DatatableContainer
       columns={columns}
       fetchData={fetchTechniques}
-      modalComponent={ModalUpdateStock}
+      modalComponent={ModaltoAdd}
       title="STOCK DEL TÉCNICO"
-      isAdmin={false} // Assuming isAdmin should be true here
+      isAdmin={false} 
+      TextoButton={"Agregar Material al Stock Técnico"}
     />
   </>
 );

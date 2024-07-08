@@ -10,15 +10,16 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Rutas para autenticación y stocks
+// Importa las rutas
 const routesAuth = require('./routes/authRoutes');
-const routesStock = require('./routes/authRoutes'); 
-const routesStockTechnique = require('./routes/authRoutes');
-const routesTechnique = require('./crud/StockTechnique/techniques') 
+const routesStock = require('./routes/stockRoutes'); // Asegúrate de que este archivo existe y está bien definido
+const routesStockTechnique = require('./routes/stocktechniqueRoutes'); 
+const tecnicoRoutes = require('./routes/tecnicoRoutes');
+// Usa las rutas
 app.use('/', routesAuth);
-app.use('/stock', routesStock); // Monta las rutas de stocks bajo el prefijo '/stock'
-app.use('/stocktechnique',routesStockTechnique);
-app.use('/technique',routesTechnique);
+app.use('/stock', routesStock);
+app.use('/stocktechnique', routesStockTechnique);
+app.use('/tecnico', tecnicoRoutes);
 app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
+  console.log(`App listening on port ${port}`);
 });

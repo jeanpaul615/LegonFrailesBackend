@@ -1,77 +1,93 @@
-const db = require('../config/db');
+// controllers/tecnicoController.js
+const Tecnico = require('..//Models/Technique/techniques'); // Corregido el path del require
 
-const TechniqueController = {
-  getAllTechniques: (callback) => {
-    const query = 'SELECT * FROM tecnicos';
-
-    db.query(query, (err, results) => {
-      if (err) {
-        return callback(err, null);
-      }
-
-      const technicians = results.map(row => ({
-        id: row.Id_tecnico,
-        cedula: row.Cedula,
-        nombres: row.Nombres,
-        apellidos: row.Apellidos,
-        telefonos: row.Telefonos,
-        fechaLicencia: row.Fecha_licencia,
-        vencimientoLicencia: row.Vencimiento_licencia,
-        cargo: row.Cargo,
-        estado: row.Estado,
-        fechaCreacion: row.Fecha_creacion,
-        fechaModificacion: row.Fecha_modificacion
-      }));
-
-      callback(null, technicians);
+exports.getAllTecnicos = (req, res) => {
+  Tecnico.getAll()
+    .then(results => {
+      res.json(results);
+    })
+    .catch(err => {
+      res.status(500).json({ error: err.message });
     });
-  },
-
-  addTechnique: (technicianData, callback) => {
-    const {
-      cedula,
-      nombres,
-      apellidos,
-      telefonos,
-      fechaLicencia,
-      vencimientoLicencia,
-      cargo,
-      estado,
-      fechaCreacion,
-      fechaModificacion
-    } = technicianData;
-
-    const query = 'INSERT INTO tecnicos (Cedula, Nombres, Apellidos, Telefonos, Fecha_licencia, Vencimiento_licencia, Cargo, Estado, Fecha_creacion, Fecha_modificacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    db.query(query, [cedula, nombres, apellidos, telefonos, fechaLicencia, vencimientoLicencia, cargo, estado, fechaCreacion, fechaModificacion], (err, result) => {
-      if (err) {
-        return callback(err, null);
-      }
-      callback(null, { message: 'Técnico agregado correctamente', insertId: result.insertId });
-    });
-  },
-
-  deleteTechnique: (technicianId, callback) => {
-    const query = 'DELETE FROM tecnicos WHERE Id_tecnico = ?';
-    db.query(query, [technicianId], callback);
-  },
-
-  updateTechnique: (technicianData, callback) => {
-    const {
-      id,
-      cedula,
-      nombres,
-      apellidos,
-      telefonos,
-      fechaLicencia,
-      vencimientoLicencia,
-      cargo,
-      estado,
-      fechaModificacion
-    } = technicianData;
-
-    const query = 'UPDATE tecnicos SET Cedula = ?, Nombres = ?, Apellidos = ?, Telefonos = ?, Fecha_licencia = ?, Vencimiento_licencia = ?, Cargo = ?, Estado = ?, Fecha_modificacion = ? WHERE Id_tecnico = ?';
-    db.query(query, [cedula, nombres, apellidos, telefonos, fechaLicencia, vencimientoLicencia, cargo, estado, fechaModificacion, id], callback);
-  }
 };
 
-module.exports = TechniqueController;
+exports.getTecnicoById = (req, res) => {
+  const { id } = req.params;
+  Tecnico.getById(id)
+    .then(result => {
+      if (!result) {
+        return res.status(404).json({ message: 'Tecnico not found' });
+      }
+      res.json(result);
+    })
+    .catch(err => {
+      res.status(500).json({ error: err.message });
+    });
+};
+
+// controllers/tecnicoController.js
+exports.createTecnico = (req, res) => {
+  const {
+    Cedula,
+    Nombre,
+    Telefonos,
+    Fecha_licencia,
+    Vencimiento_licencia,
+    Cargo,
+    Estado
+  } = req.body;
+
+  // Verificar que el campo Nombre no esté vacío o nulo
+  if (!Nombre) {
+    return res.status(400).json({ error: "Nombre is required" });
+  }
+
+  Tecnico.create({
+    Cedula,
+    Nombre,
+    Telefonos,
+    Fecha_licencia,
+    Vencimiento_licencia,
+    Cargo,
+    Estado,
+    Fecha_creacion: new Date()
+  })
+    .then(result => {
+      res.status(201).json({ message: 'Tecnico created', id: result.insertId });
+    })
+    .catch(err => {
+      res.status(500).json({ error: err.message });
+    });
+};
+
+
+exports.updateTecnico = (req, res) => {
+  const { id } = req.params;
+  const updatedTecnico = req.body;
+
+  Tecnico.update(id, updatedTecnico)
+    .then(result => {
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Tecnico not found' });
+      }
+      res.json({ message: 'Tecnico updated' });
+    })
+    .catch(err => {
+      res.status(500).json({ error: err.message });
+    });
+};
+
+exports.deleteTecnico = (req, res) => {
+  const { id } = req.params;
+
+  Tecnico.delete(id)
+    .then(result => {
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Tecnico not found' });
+      }
+      res.json({ message: 'Tecnico deleted' });
+    })
+    .catch(err => {
+      res.status(500).json({ error: err.message });
+    });
+};

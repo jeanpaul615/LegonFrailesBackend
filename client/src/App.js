@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Main from './components/Main';
 import StockTable from './components/Stocksistema/DatatableStockSistema';
 import TechnicalTable from './components/stockTecnico/DatatableStockTecnico';
+import TechniquesTable from './components/techniques/DatatableTechniques';
 
 export default function App() {
   return (
@@ -13,6 +14,8 @@ export default function App() {
         <Route exact path='/main' element={<Main />} />
         <Route exact path='/datatablestock' element={<StockTable/>} />
         <Route exact path='/datatabletechnical' element={<TechnicalTable/>} />
+        <Route exact path='/datatabletechniques' element={<TechniquesTable/>} />
+
       </Routes>
     </Router>
   );
