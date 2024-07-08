@@ -76,6 +76,7 @@ export const getMaterials = async () => {
 };
 
 // Función para obtener el stock por material en formato application/json
+// Función para obtener el stock por material en formato application/json
 export const getStockByMaterial = async (Nombre_material) => {
   try {
     const response = await fetch('http://localhost:5000/stock/byname', {
@@ -93,16 +94,18 @@ export const getStockByMaterial = async (Nombre_material) => {
     const data = await response.json();
     console.log(data);
 
-    if (!data || typeof data !== 'number') {
+    // Asegúrate de que el data contenga la propiedad cantidad
+    if (!data || typeof data.cantidad !== 'number') {
       throw new Error('Material no encontrado');
     }
 
-    return data; // Devolver solo la cantidad
+    return data.cantidad; // Devolver solo la cantidad
   } catch (error) {
     console.error('Error al obtener el stock por material:', error);
     throw error; // Propaga el error para ser manejado en un nivel superior
   }
 };
+
 
 
 

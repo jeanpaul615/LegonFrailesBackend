@@ -4,8 +4,8 @@ import qs from 'qs'; // Importa el módulo 'qs' para serializar los datos en for
 // Función para guardar los datos en la tabla stocktecnico y actualizar stocksistema
 export const SaveStockTecnico = async (Id_stocktecnico, Nombre_material, Cantidad, Nombre_tecnico) => {
   try {
-    // Crea un objeto con los datos que quieres enviar
-    const formData = {
+    // Crea un objeto con los datos que quieres enviar para guardar en stocktecnico
+    const formDataStockTecnico = {
       Id_stocktecnico,
       Nombre_material,
       Cantidad,
@@ -13,15 +13,31 @@ export const SaveStockTecnico = async (Id_stocktecnico, Nombre_material, Cantida
     };
 
     // Guardar en stocktecnico usando x-www-form-urlencoded
-    const response = await axios.post('http://localhost:5000/stocktechnique/add-stocktechnique', qs.stringify(formData), {
+    const responseStockTecnico = await axios.post('http://localhost:5000/stocktechnique/add-stocktechnique', qs.stringify(formDataStockTecnico), {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     });
+
+    // Crea un objeto con los datos que quieres enviar para actualizar en stocksistema
+    const formDataStockSistema = {
+      Nombre_material,
+      Cantidad
+    };
+
+    // Actualizar stocksistema usando x-www-form-urlencoded
+    const responseStockSistema = await axios.post('http://localhost:5000/stock/update-stockbytecnico', qs.stringify(formDataStockSistema), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+
+    // Recargar la página después de completar ambas operaciones
     window.location.reload();
-    return { success: true, response };
+
+    return { success: true, responseStockTecnico, responseStockSistema };
   } catch (error) {
-    console.error('Error al guardar en stocktecnico:', error);
+    console.error('Error al guardar en stocktecnico o actualizar stocksistema:', error);
     return { success: false, error };
   }
 };

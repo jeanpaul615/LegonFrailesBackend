@@ -22,13 +22,8 @@ const columns = [
     render: (date) => format(new Date(date), 'dd/MM/yyyy') // Formato dd/mm/aaaa HH:mm:ss
   },
   { 
-    title: 'Fecha de Modificación', 
-    data: 'Fecha_licencia',
-    render: (date) => format(new Date(date), 'dd/MM/yyyy') // Formato dd/mm/aaaa HH:mm:ss
-  },
-  { 
     title: 'Fecha de Licencia', 
-    data: 'Fecha_modificacion',
+    data: 'Fecha_licencia',
     render: (date) => format(new Date(date), 'dd/MM/yyyy') 
   },
   { 

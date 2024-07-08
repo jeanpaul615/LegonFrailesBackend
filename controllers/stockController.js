@@ -29,86 +29,71 @@ const StockController = {
   },
 
   updateStock: (req, res) => {
-    const { Id_stocksistema, Nombre_material } = req.params;
-    const { Cantidad, Estado } = req.body;
-  
-    try {
-      // Obtener el stock actual del material
-      const currentStock = db.query('SELECT Cantidad FROM stocksistema WHERE Id_stocksistema = ? AND Nombre_material = ?', [Id_stocksistema, Nombre_material]);
-  
-      if (currentStock.length === 0) {
-        return res.status(404).json({ error: 'Stock not found' });
+    const { Id_stocksistema } = req.params;
+    const { Nombre_material, Cantidad, Estado } = req.body;
+
+    Stock.updateStock(Id_stocksistema, Nombre_material, Cantidad, Estado, (err, result) => {
+      if (err) {
+        console.error('Error al actualizar stock:', err);
+        return res.status(500).json({ error: 'Error interno al actualizar stock' });
       }
-  
-      const updatedStock = currentStock[0].Cantidad - Cantidad;
-  
-      // Actualizar el stock en la base de datos
-      db.query('UPDATE stocksistema SET Cantidad = ?, Estado = ? WHERE Id_stocksistema = ? AND Nombre_material = ?', [updatedStock, Estado, Id_stocksistema, Nombre_material]);
-  
-      res.status(200).json({ message: 'Stock updated successfully' });
-    } catch (error) {
-      console.error('Error updating stock:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
+      res.status(200).json({ message: 'Stock actualizado correctamente' });
+    });
   },
+
   getCantidadByNombreMaterial: (req, res) => {
     const { Nombre_material } = req.body;
 
     if (!Nombre_material) {
-        return res.status(400).json({ error: 'Nombre_material is required in the request body' });
+      return res.status(400).json({ error: 'Nombre_material es requerido en el cuerpo de la solicitud' });
     }
 
-    Stock.getCantidadByNombreMaterial(Nombre_material, (err, stock) => {
-        if (err) {
-            console.error('Error fetching stock:', err);
-            res.status(500).json({ error: 'Error fetching stock' });
-            return;
-        }
-
-        if (!stock) {
-            res.status(404).json({ error: `No stock found with Nombre_material '${Nombre_material}'` });
-        } else {
-            res.json(stock);
-        }
-    });
-},
-deleteStock: (req, res) => {
-  const { id } = req.params;
-
-  // Obtener el stock técnico a eliminar para obtener la cantidad
-  Stocktechnique.getByStockTecnicoId(id, (err, stock) => {
-    if (err) {
-      console.error('Error al obtener stock técnico:', err);
-      return res.status(500).json({ error: 'Error interno al obtener stock técnico' });
-    }
-
-    if (!stock) {
-      return res.status(404).json({ error: 'Stock técnico no encontrado' });
-    }
-
-    const { Nombre_material, Cantidad } = stock;
-
-    // Restar la cantidad del material eliminado en stocktecnico de stocksistema
-    Stock.updateStockByMaterial(Nombre_material, -Cantidad, (err) => {
+    Stock.getCantidadByNombreMaterial(Nombre_material, (err, cantidad) => {
       if (err) {
-        console.error('Error al actualizar stocksistema:', err);
-        return res.status(500).json({ error: 'Error interno al actualizar stocksistema' });
+        console.error('Error al obtener cantidad:', err);
+        res.status(500).json({ error: 'Error en el servidor' });
+      } else if (cantidad === null) {
+        res.status(404).json({ error: 'Stock no encontrado' });
+      } else {
+        res.status(200).json({ cantidad });
       }
+    });
+  },
 
-      // Una vez actualizado stocksistema, eliminar el registro en stocktecnico
-      Stocktechnique.deleteTechnique(id, (err) => {
+  updateStockByTecnico: (req, res) => {
+    const { Nombre_material } = req.body;
+    const CantidadARestar = parseInt(req.body.Cantidad, 10); // Cantidad a restar
+  
+    if (!Nombre_material || isNaN(CantidadARestar)) {
+      return res.status(400).json({ error: 'Datos inválidos' });
+    }
+  
+    Stock.getCantidadByNombreMaterial(Nombre_material, (err, cantidadActual) => {
+      if (err) {
+        console.error('Error al obtener la cantidad del stock:', err);
+        return res.status(500).json({ error: 'Error interno al obtener la cantidad del stock' });
+      }
+  
+      if (cantidadActual === null) {
+        return res.status(404).json({ error: 'Material no encontrado' });
+      }
+  
+      const nuevaCantidad = cantidadActual - CantidadARestar;
+  
+      if (nuevaCantidad < 0) {
+        return res.status(400).json({ error: 'La cantidad a restar es mayor que la cantidad actual' });
+      }
+  
+      Stock.updateStockByMaterial(Nombre_material, nuevaCantidad, (err, result) => {
         if (err) {
-          console.error('Error al eliminar stock técnico:', err);
-          return res.status(500).json({ error: 'Error interno al eliminar stock técnico' });
+          console.error('Error al actualizar el stock:', err);
+          return res.status(500).json({ error: 'Error interno al actualizar el stock' });
         }
-        res.status(200).json({ message: 'Stock técnico eliminado correctamente' });
+  
+        res.status(200).json({ message: 'Stock actualizado correctamente' });
       });
     });
-  });
-},
+  },
 };
-
-
-
 
 module.exports = StockController;
