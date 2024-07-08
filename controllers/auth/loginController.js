@@ -7,7 +7,7 @@ exports.login = (req, res) => {
         if (err) {
             res.status(500).send('Error en el servidor');
         } else {
-            res.status(200).json(result);
+            res.status(200).json(result); 
         }
     });
 };

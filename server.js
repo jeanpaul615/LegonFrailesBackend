@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Importa las rutas
-const routesAuth = require('./routes/authRoutes');
+const routesAuth = require('./routes/auth/authRoutes');
 const routesStock = require('./routes/stockRoutes');
 const routesStockTechnique = require('./routes/stocktechniqueRoutes');
 const tecnicoRoutes = require('./routes/tecnicoRoutes');
