@@ -94,6 +94,38 @@ const StockController = {
       });
     });
   },
+
+  updateStockByDevolucion: (req, res) => {
+    const { Nombre_material } = req.body;
+    const CantidadARestar = parseInt(req.body.Cantidad, 10); // Cantidad a restar
+  
+    if (!Nombre_material || isNaN(CantidadARestar)) {
+      return res.status(400).json({ error: 'Datos inválidos' });
+    }
+  
+    Stock.getCantidadByNombreMaterial(Nombre_material, (err, cantidadActual) => {
+      if (err) {
+        console.error('Error al obtener la cantidad del stock:', err);
+        return res.status(500).json({ error: 'Error interno al obtener la cantidad del stock' });
+      }
+  
+      if (cantidadActual === null) {
+        return res.status(404).json({ error: 'Material no encontrado' });
+      }
+  
+      const nuevaCantidad = cantidadActual + CantidadARestar;
+  
+  
+      Stock.updateStockByMaterial(Nombre_material, nuevaCantidad, (err, result) => {
+        if (err) {
+          console.error('Error al actualizar el stock:', err);
+          return res.status(500).json({ error: 'Error interno al actualizar el stock' });
+        }
+  
+        res.status(200).json({ message: 'Stock actualizado correctamente' });
+      });
+    });
+  },
 };
 
 module.exports = StockController;

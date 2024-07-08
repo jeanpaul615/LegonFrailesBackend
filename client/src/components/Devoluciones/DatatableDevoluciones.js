@@ -6,7 +6,6 @@ import ModaltoAdd from './ModaltoAdd';
 
 const columns = [
   { title: 'ID', data: 'Id_devolucion' },
-  { title: 'N° Remision', data: 'Remision' },
   { title: 'Nombre del Material', data: 'Nombre_material' },
   { title: 'Cantidad', data: 'Cantidad' },
   { 

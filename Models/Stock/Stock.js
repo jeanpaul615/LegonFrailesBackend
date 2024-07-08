@@ -46,6 +46,17 @@ const Stock = {
     });
   },
 
+  updateStockByDevolucion: (Nombre_material, Cantidad, callback) => {
+    const query = 'UPDATE stocksistema SET Cantidad = ? WHERE Nombre_material = ?';
+    db.query(query, [Cantidad, Nombre_material], (err, result) => {
+      if (err) {
+        console.error('Error al actualizar stock:', err);
+        return callback(err, null);
+      }
+      callback(null, { message: 'Stock actualizado correctamente' });
+    });
+  },
+
   getCantidadByNombreMaterial: (Nombre_material, callback) => {
     const query = 'SELECT Cantidad FROM stocksistema WHERE Nombre_material = ?';
     db.query(query, [Nombre_material], (err, results) => {

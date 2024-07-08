@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { SaveStockTecnico } from "../../controllers/StockTechnique/SaveStockTecnico";
-import { getMaterials, getStockByMaterial } from "../../controllers/StockTechnique/addStock"; // Ajusta la ruta según sea necesario
+import { AddDevolucion } from "../../controllers/Devolucion/AddDevolucion";
+import { getMaterials, getStockByMaterial } from "../../controllers/StockTechnique/addStock";
 
 const ModaltoAdd = ({ isOpen, onClose }) => {
   const [materialData, setMaterialData] = useState({
-    Remision: 0,
     Nombre_material: "",
     Stock: 0,
     Cantidad: 0,
-    Fecha: "",
+    Estado: ""
   });
 
   const [materials, setMaterials] = useState([]);
@@ -26,10 +25,10 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { Nombre_material, Cantidad, Nombre } = materialData;
-      const response = await SaveStockTecnico(materialData.Id_stocksistema, Nombre_material, Cantidad, Nombre);
+      const { Nombre_material, Cantidad, Estado } = materialData;
+      const response = await AddDevolucion(Nombre_material, Cantidad, Estado);
       console.log("Operación exitosa:", response);
-      onClose(); // Cierra el modal después de agregar y eliminar
+      onClose(); // Cierra el modal después de agregar
     } catch (error) {
       console.error("Error al realizar la operación:", error);
     }
@@ -52,14 +51,12 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
       // Reset filtered materials if value is empty
       setFilteredMaterials([]);
     }
-
   };
 
   const handleMaterialClick = async (material) => {
     setMaterialData({
       ...materialData,
-      Nombre_material: material.Nombre_material,
-      Id_stocksistema: material.Id_stocksistema // Asegúrate de tener el Id_stocksistema necesario
+      Nombre_material: material.Nombre_material
     });
 
     try {
@@ -110,20 +107,6 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
               </ul>
             )}
           </div>
-
-          <div className="mb-4">
-            <label className="block mb-2 text-sm font-medium text-gray-700">N° Remision</label>
-            <input
-              type="number"
-              name="Numero de remision"
-              value={materialData.Remision}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-              readOnly
-            />
-          </div>
-
           <div className="mb-4">
             <label className="block mb-2 text-sm font-medium text-gray-700">Stock</label>
             <input
@@ -142,6 +125,17 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
               type="number"
               name="Cantidad"
               value={materialData.Cantidad}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2 text-sm font-medium text-gray-700">Estado</label>
+            <input
+              type="text"
+              name="Estado"
+              value={materialData.Estado}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
