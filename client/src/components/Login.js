@@ -1,53 +1,40 @@
 import React, { useState } from 'react';
-import StockTable from '../components/Stocksistema/DatatableStockSistema';
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginSuccessful, setLoginSuccessful] = useState(false);
+  const navigate = useNavigate(); // Utiliza el hook useNavigate
 
-    const handdleLogin = (e) =>{
-        e.preventDefault();
-        const data = {
-            username: username,
-            password: password
-        };
-        fetch('http://localhost:5000/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response=> response.json())
-            .then(result => {
-                console.log(result.token)
-                if(result.token){
-                    localStorage.setItem('token', result.token)
-                    setLoginSuccessful(true);
-                } else {
-                    console.log("error de usuario")
-                    setLoginSuccessful(false);
-                }
-            })
-            .catch(error =>{
-                console.log(error)
-            })
-    }
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    try {
-      // Lógica de autenticación (a implementar)
-      console.log(`Username: ${username}, Password: ${password}`);
-      
-      // Limpia los campos después del envío
-      setUsername('');
-      setPassword('');
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error.message);
-    }
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const data = {
+      username: username,
+      password: password
+    };
+    fetch('http://localhost:5000/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(result => {
+        console.log(result.token);
+        if (result.token) {
+          localStorage.setItem('token', result.token);
+          setLoginSuccessful(true);
+          navigate('/datatablestock'); // Redirige a /datatablestock
+        } else {
+          console.log("error de usuario");
+          setLoginSuccessful(false);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   return (
@@ -56,8 +43,8 @@ export default function Login() {
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Inicia sesión en tu cuenta</h2>
         </div>
-        {loginSuccessful ? <StockTable />:
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        {loginSuccessful ? null : // Eliminar la visualización de StockTable en caso de loginSuccessful
+        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
           <input type="hidden" name="remember" defaultValue="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -112,7 +99,6 @@ export default function Login() {
 
           <div>
             <button
-              onClick={handdleLogin}
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
