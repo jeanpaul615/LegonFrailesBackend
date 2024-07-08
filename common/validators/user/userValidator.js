@@ -1,4 +1,4 @@
-const db = require('../../config/db');
+const db = require('../../../config/db');
 
 const checkIfUserExists = (username, callback) => {
     const consult = 'SELECT * FROM login WHERE username = ?';

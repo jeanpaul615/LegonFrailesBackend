@@ -1,5 +1,5 @@
 // controllers/tecnicoController.js
-const Tecnico = require('..//Models/Technique/techniques'); // Corregido el path del require
+const Tecnico = require('../Models/Technique/techniques'); // Corregido el path del require
 
 exports.getAllTecnicos = (req, res) => {
   Tecnico.getAll()
