@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { addTechnician } from '../../controllers/technique/addTechnique';
 
 const ModaltoAdd = ({ isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -19,11 +20,17 @@ const ModaltoAdd = ({ isOpen, onClose, onSave }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave(formData);
-    onClose();
+    try {
+      await addTechnician(formData);
+      onClose();
+    } catch (error) {
+      console.error('Error al guardar técnico:', error);
+      // Aquí podrías mostrar un mensaje de error al usuario si es necesario
+    }
   };
+  
 
   if (!isOpen) return null;
 

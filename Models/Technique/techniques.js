@@ -1,4 +1,3 @@
-// models/Tecnico.js
 const db = require('../../config/db');
 
 const Tecnico = {
@@ -24,25 +23,24 @@ const Tecnico = {
     });
   },
 
-  create: (Cedula, Nombre, Telefonos, Fecha_licencia, Vencimiento_licencia, Cargo, Estado) => {
-    const newTecnico = {
-      Cedula: Cedula,
-      Nombre: Nombre,
-      Telefonos: Telefonos,
-      Fecha_licencia: Fecha_licencia,
-      Vencimiento_licencia: Vencimiento_licencia,
-      Cargo: Cargo,
-      Estado: Estado,
-      Fecha_creacion: new Date()
-    };
-
-    return new Promise((resolve, reject) => {
-      db.query('INSERT INTO tecnicos SET ?', newTecnico, (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve({ message: 'Tecnico created', id: results.insertId });
-      });
+  addTechnician: (technicianData, callback) => {
+    const query = `INSERT INTO tecnicos (Cedula, Nombre, Telefonos, Fecha_licencia, Vencimiento_licencia, Cargo, Estado, Fecha_creacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    
+    db.query(query, [
+      technicianData.Cedula,
+      technicianData.Nombre,
+      technicianData.Telefonos,
+      technicianData.Fecha_licencia,
+      technicianData.Vencimiento_licencia,
+      technicianData.Cargo,
+      technicianData.Estado,
+      technicianData.Fecha_creacion
+    ], (err, result) => {
+      if (err) {
+        console.error('Error al insertar técnico:', err);
+        return callback(err, null);
+      }
+      callback(null, { message: 'Técnico agregado correctamente', insertId: result.insertId });
     });
   },
 

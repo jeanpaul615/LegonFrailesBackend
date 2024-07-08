@@ -25,24 +25,14 @@ exports.getTecnicoById = (req, res) => {
     });
 };
 
-// controllers/tecnicoController.js
-exports.createTecnico = (req, res) => {
-  const {
-    Cedula,
-    Nombre,
-    Telefonos,
-    Fecha_licencia,
-    Vencimiento_licencia,
-    Cargo,
-    Estado
-  } = req.body;
+exports.addTechnician = (req, res) => {
+  const { Cedula, Nombre, Telefonos, Fecha_licencia, Vencimiento_licencia, Cargo, Estado } = req.body;
 
-  // Verificar que el campo Nombre no esté vacío o nulo
-  if (!Nombre) {
-    return res.status(400).json({ error: "Nombre is required" });
+  if (!Cedula || !Nombre || !Telefonos || !Fecha_licencia || !Vencimiento_licencia || !Cargo || Estado === undefined) {
+    return res.status(400).json({ error: 'Todos los campos son requeridos' });
   }
 
-  Tecnico.create({
+  const technicianData = {
     Cedula,
     Nombre,
     Telefonos,
@@ -50,14 +40,16 @@ exports.createTecnico = (req, res) => {
     Vencimiento_licencia,
     Cargo,
     Estado,
-    Fecha_creacion: new Date()
-  })
-    .then(result => {
-      res.status(201).json({ message: 'Tecnico created', id: result.insertId });
-    })
-    .catch(err => {
-      res.status(500).json({ error: err.message });
-    });
+    Fecha_creacion: new Date().toISOString().split('T')[0] // Formato YYYY-MM-DD
+  };
+
+  Tecnico.addTechnician(technicianData, (err, result) => {
+    if (err) {
+      console.error('Error al agregar técnico:', err);
+      return res.status(500).json({ error: 'Error interno al agregar técnico' });
+    }
+    res.status(200).json({ message: 'Técnico agregado correctamente', insertId: result.insertId });
+  });
 };
 
 

@@ -18,8 +18,9 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
   useEffect(() => {
     const fetchTechniciansAndMaterials = async () => {
       const techs = await getTechnicians();
+      const filteredTechs = techs.filter(tech => tech.Estado === 1); // Filtrar técnicos activos
+      setTechnicians(filteredTechs || []);
       const mats = await getMaterials();
-      setTechnicians(techs || []);
       setMaterials(mats || []);
     };
 
