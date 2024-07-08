@@ -1,26 +1,33 @@
 const express = require('express');
-const path = require('path');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 const app = express();
-const PORT = process.env.PORT || 5000;
+const port = 5000;
 
-// Middleware para parsear JSON y URL-encoded bodies
+// Middleware
+const corsOptions = {
+  origin: '*', // Permitir todas las solicitudes de origen
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Permitir estos métodos
+  allowedHeaders: ['Content-Type', 'Authorization'] // Permitir estos encabezados
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Rutas estáticas
-app.use(express.static(path.join(__dirname, 'public')));
+// Importa las rutas
+const routesAuth = require('./routes/authRoutes');
+const routesStock = require('./routes/stockRoutes');
+const routesStockTechnique = require('./routes/stocktechniqueRoutes');
+const tecnicoRoutes = require('./routes/tecnicoRoutes');
 
-// Ruta de ejemplo
-app.get('/', (req, res) => {
-  res.send('¡Servidor Node.js funcionando correctamente!');
-});
+// Usa las rutas
+app.use('/', routesAuth);
+app.use('/stock', routesStock);
+app.use('/stocktechnique', routesStockTechnique);
+app.use('/tecnico', tecnicoRoutes);
 
-// Manejo de errores 404
-app.use((req, res, next) => {
-  res.status(404).send("Lo siento, no se encontró lo que estabas buscando.");
-});
-
-// Iniciar el servidor
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`App listening on port ${port}`);
 });
