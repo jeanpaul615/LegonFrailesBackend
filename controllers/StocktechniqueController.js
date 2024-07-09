@@ -64,6 +64,7 @@ const TechniqueController = {
       res.status(200).json({ message: 'Técnica eliminada correctamente' });
     });
   },
+  
 
   updateTechnique: (req, res) => {
     const { id } = req.params;
@@ -80,7 +81,28 @@ const TechniqueController = {
       }
       res.status(200).json({ message: 'Técnica actualizada correctamente' });
     });
+  },
+// Modifica la función getCantidadStockTechnique en TechniqueController.js
+
+getCantidadStockTechnique: (req, res) => {
+  const { Nombre_material, Nombre_tecnico } = req.body;
+
+  if (!Nombre_material || !Nombre_tecnico) {
+    return res.status(400).json({ error: 'Nombre_material y Nombre_tecnico son requeridos en el cuerpo de la solicitud' });
   }
+
+  Stock.getCantidadStockTechnique(Nombre_material, Nombre_tecnico, (err, cantidad) => {
+    if (err) {
+      console.error('Error al obtener cantidad:', err);
+      res.status(500).json({ error: 'Error en el servidor' });
+    } else if (cantidad === null) {
+      res.status(404).json({ error: 'Stock no encontrado' });
+    } else {
+      res.status(200).json({ cantidad });
+    }
+  });
+},
+
   
 };
 

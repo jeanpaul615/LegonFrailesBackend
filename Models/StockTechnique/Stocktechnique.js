@@ -56,7 +56,27 @@ const Stocktechnique = {
       }
       callback(null); // Llama al callback sin error si la actualización fue exitosa
     });
-  }
+  },
+
+// Modifica la función getCantidadStockTechnique en Stocktechnique.js
+
+getCantidadStockTechnique: (Nombre_material, Nombre_tecnico, callback) => {
+  const query = 'SELECT Cantidad FROM stocktecnico WHERE Nombre_material = ? AND Nombre_tecnico = ?';
+  // Pasa [Nombre_material, Nombre_tecnico] como un solo arreglo de parámetros
+  db.query(query, [Nombre_material, Nombre_tecnico], (err, results) => {
+    if (err) {
+      callback(err, null);
+      return;
+    }
+
+    if (results.length === 0) {
+      callback(null, null); // No se encontró ningún stock con ese Nombre_material y Nombre_tecnico
+    } else {
+      callback(null, results[0].Cantidad);
+    }
+  });
+},
+
 
 };
 

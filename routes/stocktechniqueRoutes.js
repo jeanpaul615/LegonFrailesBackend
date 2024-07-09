@@ -6,5 +6,6 @@ router.get('/get-stocktechnique', TechniqueController.getAllTechniques);
 router.post('/add-stocktechnique', TechniqueController.addTechnique);
 router.delete('/delete-stocktechnique', TechniqueController.deleteTechnique);
 router.put('/update-stocktechnique', TechniqueController.updateTechnique);
+router.post('/byname', TechniqueController.getCantidadStockTechnique);
 
 module.exports = router;
