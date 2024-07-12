@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { getTechnicians, getMaterials, getStockByMaterial,submitContrato } from "../../../controllers/Contrato/addStock"; // Ajusta la ruta según sea necesario
+import { getTechnicians, getMaterials, getStockByMaterial } from "../../../controllers/TecnicoaSistema/AddStock"; // Ajusta la ruta según sea necesario
 
 const ModaltoAdd = ({ isOpen, onClose }) => {
-  const [contractData, setContractData] = useState({
-    Nombre_contrato: "",
-    Nombre_tecnico: "",
+  const [materialData, setMaterialData] = useState({
     Nombre_material: "",
+    Nombre_tecnico: "",
+    Nombre: "",
     Stock: 0,
     Cantidad: 0,
+    Id_stocksistema: null
   });
 
   const [technicians, setTechnicians] = useState([]);
@@ -18,25 +19,35 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
   useEffect(() => {
     const fetchTechniciansAndMaterials = async () => {
       const techs = await getTechnicians();
-      const filteredTechs = techs.filter((tech) => tech.Estado === 1); // Filtrar técnicos activos
+      const filteredTechs = techs.filter(tech => tech.Estado === 1); // Filtrar técnicos activos
       setTechnicians(filteredTechs || []);
-      const mats = await getMaterials();
-      setMaterials(mats || []);
+  
+      // Actualiza los materiales solo si Nombre_tecnico está definido
+      if (materialData.Nombre_tecnico) {
+        const mats = await getMaterials({ Nombre_tecnico: materialData.Nombre_tecnico });
+        setMaterials(mats || []);
+      }
     };
-
+  
     fetchTechniciansAndMaterials();
-  }, []);
+  }, [materialData.Nombre_tecnico]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setContractData((prevState) => ({
-      ...prevState,
-      [name]: value
-    }));
-
-    if (name === "Nombre_material" && value.trim().length > 0 && contractData.Nombre_tecnico.trim().length > 0) {
-      fetchStock(value, contractData.Nombre_tecnico);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Aquí iría tu lógica para agregar el stock
+      onClose(); // Cierra el modal después de agregar y eliminar
+    } catch (error) {
+      console.error("Error al realizar la operación:", error);
     }
+  };
+
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    setMaterialData({
+      ...materialData,
+      [name]: value
+    });
 
     if (name === "Nombre_material" && value.trim().length > 0) {
       setFilteredMaterials(
@@ -45,85 +56,68 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
         )
       );
     } else {
+      // Reset filtered materials if value is empty
       setFilteredMaterials([]);
     }
 
-    if (name === "Nombre_tecnico" && value.trim().length > 0) {
+    if (name === "Nombre" && value.trim().length > 0) {
       setFilteredTechnicians(
         technicians.filter((technician) =>
           technician.Nombre.toLowerCase().includes(value.toLowerCase())
         )
       );
     } else {
+      // Reset filtered technicians if value is empty
       setFilteredTechnicians([]);
     }
   };
 
-  const fetchStock = async (material, tecnico) => {
+  const handleMaterialClick = async (material) => {
+    setMaterialData({
+      ...materialData,
+      Nombre_material: material.Nombre_material,
+      Id_stocksistema: material.Id_stocksistema // Asegúrate de tener el Id_stocksistema necesario
+    });
+
     try {
-      const stock = await getStockByMaterial(material, tecnico);
-      setContractData((prevState) => ({
-        ...prevState,
+      const stock = await getStockByMaterial(material.Nombre_material, materialData.Nombre_tecnico);
+      setMaterialData((prevData) => ({
+        ...prevData,
         Stock: stock
       }));
     } catch (error) {
-      console.error("Error al obtener el stock por material:", error);
-      setContractData((prevState) => ({
-        ...prevState,
-        Stock: 0,
-        Cantidad: 0
+      console.error("Error fetching stock by material:", error);
+      setMaterialData((prevData) => ({
+        ...prevData,
+        Stock: 0 
       }));
     }
-  };
 
-  const handleMaterialClick = (material) => {
-    setContractData((prevState) => ({
-      ...prevState,
-      Nombre_material: material.Nombre_material
-    }));
     setFilteredMaterials([]); // Cierra la lista filtrada después de seleccionar un material
   };
 
   const handleTechnicianClick = (technician) => {
-    setContractData((prevState) => ({
-      ...prevState,
-      Nombre_tecnico: technician.Nombre
-    }));
+    setMaterialData({
+      ...materialData,
+      Nombre: technician.Nombre,
+      Nombre_tecnico: technician.Nombre // Asegúrate de actualizar Nombre_tecnico
+    });
     setFilteredTechnicians([]); // Cierra la lista filtrada después de seleccionar un técnico
   };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const data = await submitContrato(contractData.Nombre_contrato, contractData.Nombre_material, contractData.Nombre_tecnico, contractData.Cantidad);
-    console.log(data);
-};
-
-
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">Agregar Contrato</h2>
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">Agregar Materiales</h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block mb-2 text-sm font-medium text-gray-700">Número de Contrato</label>
-            <input
-              type="text"
-              name="Nombre_contrato"
-              value={contractData.Nombre_contrato}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-4">
+        <div className="mb-4">
             <label className="block mb-2 text-sm font-medium text-gray-700">Nombre del Técnico</label>
             <input
               type="text"
-              name="Nombre_tecnico"
-              value={contractData.Nombre_tecnico}
+              name="Nombre"
+              value={materialData.Nombre}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
@@ -147,7 +141,7 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
             <input
               type="text"
               name="Nombre_material"
-              value={contractData.Nombre_material}
+              value={materialData.Nombre_material}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
@@ -171,11 +165,11 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
             <input
               type="number"
               name="Stock"
-              value={contractData.Stock}
+              value={materialData.Stock}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              readOnly
               required
+              readOnly
             />
           </div>
           <div className="mb-4">
@@ -183,7 +177,7 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
             <input
               type="number"
               name="Cantidad"
-              value={contractData.Cantidad}
+              value={materialData.Cantidad}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required

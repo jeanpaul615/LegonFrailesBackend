@@ -17,7 +17,7 @@ const Stocktechnique = {
       }
     });
   },
-  getAllTechniques: (callback) => {
+  getAll: (callback) => {
     const query = 'SELECT * FROM stocktecnico';
     db.query(query, (err, results) => {
       if (err) {
@@ -74,6 +74,49 @@ getCantidadStockTechnique: (Nombre_material, Nombre_tecnico, callback) => {
     } else {
       callback(null, results[0].Cantidad);
     }
+  });
+},
+updateCantidadStockTechnique: (Nombre_material, Nombre_tecnico, Cantidad, callback) => {
+  const query = `UPDATE stocktecnico SET Cantidad = Cantidad - ?, Fecha_modificacion = ? WHERE Nombre_material = ? AND Nombre_tecnico = ?`;
+  const Fecha_modificacion = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  db.query(query, [Cantidad, Fecha_modificacion, Nombre_material, Nombre_tecnico], (err, result) => {
+    if (err) {
+      console.error('Error al actualizar la cantidad del stock en la base de datos:', err);
+      return callback(err);
+    }
+    callback(null, result);
+  });
+},
+getMaterialsByTecnico: (Nombre_tecnico, callback) => {
+  const query = 'SELECT Nombre_material, Cantidad FROM stocktecnico WHERE Nombre_tecnico = ?';
+  db.query(query, [Nombre_tecnico], (err, results) => {
+    if (err) {
+      console.error('Error al obtener materiales por técnico:', err);
+      return callback(err, null);
+    }
+    return callback(null, results);
+  });
+},
+getCantidadByTecnicoAndMaterial: (Nombre_tecnico, Nombre_material, callback) => {
+  const query = 'SELECT Cantidad FROM stocktecnico WHERE Nombre_tecnico = ? AND Nombre_material = ?';
+  db.query(query, [Nombre_tecnico, Nombre_material], (err, results) => {
+    if (err) {
+      console.error('Error al obtener cantidad por técnico y material:', err);
+      return callback(err, null);
+    }
+    if (results.length === 0) {
+      return callback(null, null); // Si no se encuentra ningún resultado
+    }
+    return callback(null, results[0].Cantidad);
+  });
+},
+getAllTecnicos: (callback) => {
+  const query = 'SELECT DISTINCT Nombre_tecnico FROM stocktecnico';
+  db.query(query, (err, results) => {
+    if (err) {
+      return callback(err);
+    }
+    callback(null, results);
   });
 },
 

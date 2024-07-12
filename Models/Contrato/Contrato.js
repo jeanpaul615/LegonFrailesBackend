@@ -12,6 +12,17 @@ class Contrato {
       callback(null, results);
     });
   }
+
+  static addContrato(Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha, callback) {
+    const query = 'INSERT INTO contratos(Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha) VALUES (?, ?, ?, ?, ?)';
+    connection.query(query, [Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha], (err, result) => {
+      if (err) {
+        console.error('Error al insertar contrato:', err);
+        return callback(err, null);
+      }
+      callback(null, { message: 'Contrato agregado correctamente', insertId: result.insertId });
+    });
+  }
 }
 
 module.exports = Contrato;

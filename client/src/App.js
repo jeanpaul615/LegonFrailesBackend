@@ -5,8 +5,9 @@ import Main from './components/Main';
 import StockTable from './components/Stocksistema/DatatableStockSistema';
 import TechnicalTable from './components/stockTecnico/DatatableStockTecnico';
 import TechniquesTable from './components/techniques/DatatableTechniques';
-import DevolucionTable from './components/Devoluciones/DatatableDevoluciones';
+import RegistroTable from './components/Registro/DatatableRegistros';
 import TecnicoaContratoTable from './components/Traslados/TecnicoaContrato/Datatable'
+import TecnicoaSistemaTable from './components/Traslados/TecnicoaSistema/Datatable';
 
 export default function App() {
   return (
@@ -17,8 +18,10 @@ export default function App() {
         <Route exact path='/datatablestock' element={<StockTable/>} />
         <Route exact path='/datatabletechnical' element={<TechnicalTable/>} />
         <Route exact path='/datatabletechniques' element={<TechniquesTable/>} />
-        <Route exact path='/datatabledevolucion' element={<DevolucionTable/>} />
+        <Route exact path='/agregarinventario' element={<RegistroTable/>} />
         <Route exact path='/tecnicoacontrato' element={<TecnicoaContratoTable/>} />
+        <Route exact path='/tecnicoasistema' element={<TecnicoaSistemaTable/>} />
+
 
 
       </Routes>

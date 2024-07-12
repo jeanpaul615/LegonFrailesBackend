@@ -9,7 +9,7 @@ const columns = [
   { title: 'Nombre del Material', data: 'Nombre_material' },
   { title: 'Cantidad', data: 'Cantidad' },
   { 
-    title: 'Fecha de Devolucion', 
+    title: 'Fecha de Registro', 
     data: 'Fecha',
     render: (data) => {
       // Assuming data is a timestamp, you can format it to dd/mm/yyyy
@@ -20,18 +20,18 @@ const columns = [
   }
 ];
 
-const DevolucionTable = () => (
+const RegistroTable = () => (
   <>
     <Sidebar />
     <DatatableContainer
       columns={columns}
       fetchData={fetchDevolucion}
       modalComponent={ModaltoAdd} 
-      TextoButton={"Registrar Devolución"}
-      title="DEVOLUCIONES"
+      TextoButton={"Agregar Materiales al Stock"}
+      title="AGREGAR MATERIALES AL STOCK"
       isAdmin={false}
     />
   </>
 );
 
-export default DevolucionTable;
+export default RegistroTable;

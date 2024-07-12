@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const fetchTechniques = async () => {
   try {
-    const response = await axios.get('http://localhost:5000/stocktechnique/get-stocktechnique');
+    const response = await axios.get('http://localhost:5000/stocktechnique/get-stock');
     console.log(response.data);
     return response.data; // Retorna los datos recibidos desde la API
   } catch (error) {
