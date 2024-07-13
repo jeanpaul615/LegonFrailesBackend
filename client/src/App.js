@@ -8,7 +8,7 @@ import TechniquesTable from './components/techniques/DatatableTechniques';
 import RegistroTable from './components/Registro/DatatableRegistros';
 import TecnicoaContratoTable from './components/Traslados/TecnicoaContrato/Datatable'
 import TecnicoaSistemaTable from './components/Traslados/TecnicoaSistema/Datatable';
-
+import EntreSedesTable from './components/Traslados/EntreSedes/Datatable';
 export default function App() {
   return (
     <Router>
@@ -20,7 +20,9 @@ export default function App() {
         <Route exact path='/datatabletechniques' element={<TechniquesTable/>} />
         <Route exact path='/agregarinventario' element={<RegistroTable/>} />
         <Route exact path='/tecnicoacontrato' element={<TecnicoaContratoTable/>} />
+        <Route exact path='/entresedes' element={<EntreSedesTable/>} />
         <Route exact path='/tecnicoasistema' element={<TecnicoaSistemaTable/>} />
+
 
 
 
