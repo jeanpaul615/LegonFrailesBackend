@@ -6,7 +6,7 @@ export const getMaterials = async (stockData) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(stockData)
+      body: JSON.stringify({stockData })
     });
 
     if (!response.ok) {
@@ -28,7 +28,7 @@ export const getTechnicians = async () => {
     if (!response.ok) {
       throw new Error(`Error en la solicitud: ${response.statusText}`);
     }
-    const data = await response.json(); // Corregido para obtener datos JSON
+    const data = await response.json();
     return data; // Asume que la respuesta es una lista de nombres de técnicos
   } catch (error) {
     console.error('Error al obtener técnicos:', error);
@@ -62,6 +62,6 @@ export const getStockByMaterial = async (Nombre_material, Nombre_tecnico) => {
     return data.cantidad; // Devolver solo la cantidad
   } catch (error) {
     console.error('Error al obtener el stock por material:', error);
-    throw error; // Propaga el error para ser manejado en un nivel superior
+    throw error;
   }
 };

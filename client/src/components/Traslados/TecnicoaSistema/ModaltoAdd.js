@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
+//import { SaveStockTecnico } from "../../controllers/StockTechnique/SaveStockTecnico";
 import { getTechnicians, getMaterials, getStockByMaterial } from "../../../controllers/TecnicoaSistema/AddStock"; // Ajusta la ruta según sea necesario
 
 const ModaltoAdd = ({ isOpen, onClose }) => {
   const [materialData, setMaterialData] = useState({
     Nombre_material: "",
-    Nombre_tecnico: "",
     Nombre: "",
     Stock: 0,
-    Cantidad: 0,
-    Id_stocksistema: null
+    Cantidad: 0
   });
 
   const [technicians, setTechnicians] = useState([]);
@@ -21,21 +20,19 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
       const techs = await getTechnicians();
       const filteredTechs = techs.filter(tech => tech.Estado === 1); // Filtrar técnicos activos
       setTechnicians(filteredTechs || []);
-  
-      // Actualiza los materiales solo si Nombre_tecnico está definido
-      if (materialData.Nombre_tecnico) {
-        const mats = await getMaterials({ Nombre_tecnico: materialData.Nombre_tecnico });
-        setMaterials(mats || []);
-      }
+      const mats = await getMaterials(materialData.Nombre);
+      setMaterials(mats || []);
     };
-  
+
     fetchTechniciansAndMaterials();
-  }, [materialData.Nombre_tecnico]);
+  }, [materialData.Nombre]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Aquí iría tu lógica para agregar el stock
+      //const { Nombre_material, Cantidad, Nombre } = materialData;
+      //const response = await SaveStockTecnico(materialData.Id_stocksistema, Nombre_material, Cantidad, Nombre);
+      //console.log("Operación exitosa:", response);
       onClose(); // Cierra el modal después de agregar y eliminar
     } catch (error) {
       console.error("Error al realizar la operación:", error);
@@ -80,7 +77,7 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
     });
 
     try {
-      const stock = await getStockByMaterial(material.Nombre_material, materialData.Nombre_tecnico);
+      const stock = await getStockByMaterial(material.Nombre_material, materialData.Nombre);
       setMaterialData((prevData) => ({
         ...prevData,
         Stock: stock
@@ -99,8 +96,7 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
   const handleTechnicianClick = (technician) => {
     setMaterialData({
       ...materialData,
-      Nombre: technician.Nombre,
-      Nombre_tecnico: technician.Nombre // Asegúrate de actualizar Nombre_tecnico
+      Nombre: technician.Nombre
     });
     setFilteredTechnicians([]); // Cierra la lista filtrada después de seleccionar un técnico
   };
@@ -112,30 +108,6 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
       <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4 text-gray-800">Agregar Materiales</h2>
         <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-            <label className="block mb-2 text-sm font-medium text-gray-700">Nombre del Técnico</label>
-            <input
-              type="text"
-              name="Nombre"
-              value={materialData.Nombre}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-            {filteredTechnicians && filteredTechnicians.length > 0 && (
-              <ul className="mt-2 border border-gray-300 rounded-lg bg-white max-h-40 overflow-y-auto">
-                {filteredTechnicians.map((technician) => (
-                  <li
-                    key={technician.id}
-                    onClick={() => handleTechnicianClick(technician)}
-                    className="cursor-pointer px-3 py-2 hover:bg-gray-200"
-                  >
-                    {technician.Nombre}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
           <div className="mb-4">
             <label className="block mb-2 text-sm font-medium text-gray-700">Nombre del Material</label>
             <input
@@ -155,6 +127,30 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
                     className="cursor-pointer px-3 py-2 hover:bg-gray-200"
                   >
                     {material.Nombre_material}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2 text-sm font-medium text-gray-700">Nombre del Técnico</label>
+            <input
+              type="text"
+              name="Nombre"
+              value={materialData.Nombre}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+            {filteredTechnicians && filteredTechnicians.length > 0 && (
+              <ul className="mt-2 border border-gray-300 rounded-lg bg-white max-h-40 overflow-y-auto">
+                {filteredTechnicians.map((technician) => (
+                  <li
+                    key={technician.id}
+                    onClick={() => handleTechnicianClick(technician)}
+                    className="cursor-pointer px-3 py-2 hover:bg-gray-200"
+                  >
+                    {technician.Nombre}
                   </li>
                 ))}
               </ul>
