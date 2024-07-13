@@ -47,11 +47,11 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
     });
 
     if (name === "Nombre_material" && value.trim().length > 0) {
-      const filtered = materials.filter((material) =>
-        material.Nombre_material.toLowerCase().includes(value.toLowerCase())
-        && material.Stock > 0 // Filtrar solo si el stock es mayor que 0
+      setFilteredMaterials(
+        materials.filter((material) =>
+          material.Nombre_material.toLowerCase().includes(value.toLowerCase())
+        )
       );
-      setFilteredMaterials(filtered);
     } else {
       // Reset filtered materials if value is empty
       setFilteredMaterials([]);

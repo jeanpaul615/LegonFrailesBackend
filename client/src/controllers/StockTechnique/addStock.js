@@ -92,7 +92,6 @@ export const getStockByMaterial = async (Nombre_material) => {
     }
 
     const data = await response.json();
-    console.log(data);
 
     // Asegúrate de que el data contenga la propiedad cantidad
     if (!data || typeof data.cantidad !== 'number') {
@@ -105,7 +104,3 @@ export const getStockByMaterial = async (Nombre_material) => {
     throw error; // Propaga el error para ser manejado en un nivel superior
   }
 };
-
-
-
-
