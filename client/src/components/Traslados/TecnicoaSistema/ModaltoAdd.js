@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-//import { SaveStockTecnico } from "../../controllers/StockTechnique/SaveStockTecnico";
-import { getTechnicians, getMaterials, getStockByMaterial } from "../../../controllers/TecnicoaSistema/AddStock"; // Ajusta la ruta según sea necesario
+import { getTechnicians, getMaterials, getStockByMaterial, SaveStockTecnico } from "../../../controllers/TecnicoaSistema/AddStock";
 
 const ModaltoAdd = ({ isOpen, onClose }) => {
   const [materialData, setMaterialData] = useState({
     Nombre_material: "",
-    Nombre: "",
+    Nombre_tecnico: "",
     Stock: 0,
     Cantidad: 0
   });
@@ -18,22 +17,21 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
   useEffect(() => {
     const fetchTechniciansAndMaterials = async () => {
       const techs = await getTechnicians();
-      const filteredTechs = techs.filter(tech => tech.Estado === 1); // Filtrar técnicos activos
-      setTechnicians(filteredTechs || []);
-      const mats = await getMaterials(materialData.Nombre);
+      setTechnicians(techs || []);
+      const mats = await getMaterials(materialData.Nombre_tecnico); // Debes ajustar cómo obtienes los materiales según el técnico seleccionado
       setMaterials(mats || []);
     };
 
     fetchTechniciansAndMaterials();
-  }, [materialData.Nombre]);
+  }, [materialData.Nombre_tecnico]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      //const { Nombre_material, Cantidad, Nombre } = materialData;
-      //const response = await SaveStockTecnico(materialData.Id_stocksistema, Nombre_material, Cantidad, Nombre);
-      //console.log("Operación exitosa:", response);
-      onClose(); // Cierra el modal después de agregar y eliminar
+      const { Nombre_material, Cantidad, Nombre_tecnico } = materialData;
+      const response = await SaveStockTecnico(Nombre_material, Cantidad, Nombre_tecnico);
+      console.log("Operación exitosa:", response);
+      onClose();
     } catch (error) {
       console.error("Error al realizar la operación:", error);
     }
@@ -46,6 +44,13 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
       [name]: value
     });
 
+    if (name === "Nombre_tecnico") {
+      const filteredTechs = technicians.filter((technician) =>
+        technician.Nombre_tecnico.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredTechnicians(filteredTechs);
+    }
+
     if (name === "Nombre_material" && value.trim().length > 0) {
       setFilteredMaterials(
         materials.filter((material) =>
@@ -53,19 +58,7 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
         )
       );
     } else {
-      // Reset filtered materials if value is empty
       setFilteredMaterials([]);
-    }
-
-    if (name === "Nombre" && value.trim().length > 0) {
-      setFilteredTechnicians(
-        technicians.filter((technician) =>
-          technician.Nombre.toLowerCase().includes(value.toLowerCase())
-        )
-      );
-    } else {
-      // Reset filtered technicians if value is empty
-      setFilteredTechnicians([]);
     }
   };
 
@@ -73,14 +66,14 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
     setMaterialData({
       ...materialData,
       Nombre_material: material.Nombre_material,
-      Id_stocksistema: material.Id_stocksistema // Asegúrate de tener el Id_stocksistema necesario
+      Id_stocksistema: material.Id_stocksistema
     });
 
     try {
-      const stock = await getStockByMaterial(material.Nombre_material, materialData.Nombre);
+      const stock = await getStockByMaterial(material.Nombre_material, materialData.Nombre_tecnico);
       setMaterialData((prevData) => ({
         ...prevData,
-        Stock: stock
+        Stock: stock.cantidad
       }));
     } catch (error) {
       console.error("Error fetching stock by material:", error);
@@ -90,15 +83,15 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
       }));
     }
 
-    setFilteredMaterials([]); // Cierra la lista filtrada después de seleccionar un material
+    setFilteredMaterials([]);
   };
 
   const handleTechnicianClick = (technician) => {
     setMaterialData({
       ...materialData,
-      Nombre: technician.Nombre
+      Nombre_tecnico: technician.Nombre_tecnico
     });
-    setFilteredTechnicians([]); // Cierra la lista filtrada después de seleccionar un técnico
+    setFilteredTechnicians([]);
   };
 
   if (!isOpen) return null;
@@ -108,6 +101,30 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
       <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4 text-gray-800">Agregar Materiales</h2>
         <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block mb-2 text-sm font-medium text-gray-700">Nombre del Técnico</label>
+            <input
+              type="text"
+              name="Nombre_tecnico"
+              value={materialData.Nombre_tecnico}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+            {filteredTechnicians && filteredTechnicians.length > 0 && (
+              <ul className="mt-2 border border-gray-300 rounded-lg bg-white max-h-40 overflow-y-auto">
+                {filteredTechnicians.map((technician) => (
+                  <li
+                    key={technician.Id_tecnico}
+                    onClick={() => handleTechnicianClick(technician)}
+                    className="cursor-pointer px-3 py-2 hover:bg-gray-200"
+                  >
+                    {technician.Nombre_tecnico}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
           <div className="mb-4">
             <label className="block mb-2 text-sm font-medium text-gray-700">Nombre del Material</label>
             <input
@@ -122,35 +139,11 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
               <ul className="mt-2 border border-gray-300 rounded-lg bg-white max-h-40 overflow-y-auto">
                 {filteredMaterials.map((material) => (
                   <li
-                    key={material.id}
+                    key={material.Id_stocksistema}
                     onClick={() => handleMaterialClick(material)}
                     className="cursor-pointer px-3 py-2 hover:bg-gray-200"
                   >
                     {material.Nombre_material}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2 text-sm font-medium text-gray-700">Nombre del Técnico</label>
-            <input
-              type="text"
-              name="Nombre"
-              value={materialData.Nombre}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-            {filteredTechnicians && filteredTechnicians.length > 0 && (
-              <ul className="mt-2 border border-gray-300 rounded-lg bg-white max-h-40 overflow-y-auto">
-                {filteredTechnicians.map((technician) => (
-                  <li
-                    key={technician.id}
-                    onClick={() => handleTechnicianClick(technician)}
-                    className="cursor-pointer px-3 py-2 hover:bg-gray-200"
-                  >
-                    {technician.Nombre}
                   </li>
                 ))}
               </ul>
