@@ -1,4 +1,6 @@
 import axios from "axios";
+import qs from 'qs';
+import swal from 'sweetalert2'; // Importa SweetAlert2
 
 // Función encargada de obtener materiales por técnico
 export const getMaterials = async (Nombre_tecnico) => {
@@ -67,33 +69,44 @@ export const getStockByMaterial = async (Nombre_material, Nombre_tecnico) => {
 // Función para guardar el stock técnico
 export const SaveStockTecnico = async (Nombre_material, Cantidad, Nombre_tecnico) => {
   try {
-    const response = await axios.put('http://localhost:5000/stocktechnique/update-cantidad-stocktechnique', {
+    // Crea un objeto con los datos que quieres enviar para guardar en stocktecnico
+    const formDataStockTecnico = {
       Nombre_material,
       Nombre_tecnico,
-      Cantidad,
+      Cantidad
+    };
+
+    // Guardar en stocktecnico usando x-www-form-urlencoded
+    const responseStockTecnico = await axios.put('http://localhost:5000/stocktechnique/update-cantidad-stocktechnique', qs.stringify(formDataStockTecnico), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
     });
 
-    if (!response.data) {
-      throw new Error(`Error en la solicitud: ${response.statusText}`);
-    }
-
-    // Realizar la actualización en el stock general (stock sistema)
-    const responseStockSistema = await axios.post('http://localhost:5000/stock/update-stockbydevolucion', {
+    // Crea un objeto con los datos que quieres enviar para actualizar en stocksistema
+    const formDataStockSistema = {
       Nombre_material,
-      Cantidad,
+      Cantidad
+    };
+
+    // Actualizar stocksistema usando x-www-form-urlencoded
+    const responseStockSistema = await axios.post('http://localhost:5000/stock/update-stockbydevolucion', qs.stringify(formDataStockSistema), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
     });
 
-    if (!responseStockSistema.data) {
-      throw new Error(`Error en la solicitud de actualización del stock sistema: ${responseStockSistema.statusText}`);
-    }
-
-    // No se necesita response.json() ya que axios ya maneja la respuesta JSON automáticamente
-
-    // Opcional: Recargar la página después de la actualización (esto puede mejorarse dependiendo de la arquitectura de tu aplicación)
+    // Recargar la página después de completar ambas operaciones
     window.location.reload();
-    return response.data; // Devolver los datos de la respuesta
+
+    return { success: true, responseStockTecnico, responseStockSistema };
   } catch (error) {
-    console.error('Error al guardar el stock técnico:', error);
-    throw error;
+    console.error('Error al guardar en stocktecnico o actualizar stocksistema:', error);
+    // Utiliza SweetAlert2 para mostrar una alerta de error
+    swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Error al guardar, no hay elementos que trasladar.',
+    });
   }
 };

@@ -17,15 +17,14 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     const fetchTechniciansAndMaterials = async () => {
-      const techs = await getTechnicians();
-      const filteredTechs = techs.filter((tech) => tech.Estado === 1); // Filtrar técnicos activos
-      setTechnicians(filteredTechs || []);
-      const mats = await getMaterials();
+      const techs = await getTechnicians();// Filtrar técnicos activos
+      setTechnicians(techs || []);
+      const mats = await getMaterials(contractData.Nombre_tecnico);
       setMaterials(mats || []);
     };
 
     fetchTechniciansAndMaterials();
-  }, []);
+  }, [contractData.Nombre_tecnico]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,7 +50,7 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
     if (name === "Nombre_tecnico" && value.trim().length > 0) {
       setFilteredTechnicians(
         technicians.filter((technician) =>
-          technician.Nombre.toLowerCase().includes(value.toLowerCase())
+          technician.Nombre_tecnico.toLowerCase().includes(value.toLowerCase())
         )
       );
     } else {
@@ -59,12 +58,12 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
     }
   };
 
-  const fetchStock = async (material, tecnico) => {
+  const fetchStock = async (Nombre_material, Nombre_tecnico) => {
     try {
-      const stock = await getStockByMaterial(material, tecnico);
+      const stock = await getStockByMaterial(Nombre_material, Nombre_tecnico);
       setContractData((prevState) => ({
         ...prevState,
-        Stock: stock
+        Stock: stock.cantidad
       }));
     } catch (error) {
       console.error("Error al obtener el stock por material:", error);
@@ -87,7 +86,7 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
   const handleTechnicianClick = (technician) => {
     setContractData((prevState) => ({
       ...prevState,
-      Nombre_tecnico: technician.Nombre
+      Nombre_tecnico: technician.Nombre_tecnico
     }));
     setFilteredTechnicians([]); // Cierra la lista filtrada después de seleccionar un técnico
   };
@@ -136,7 +135,7 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
                     onClick={() => handleTechnicianClick(technician)}
                     className="cursor-pointer px-3 py-2 hover:bg-gray-200"
                   >
-                    {technician.Nombre}
+                    {technician.Nombre_tecnico}
                   </li>
                 ))}
               </ul>

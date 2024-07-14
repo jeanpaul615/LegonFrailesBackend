@@ -24,6 +24,7 @@ const tecnicoRoutes = require('./routes/tecnicoRoutes');
 const devolucionRoutes = require('./routes/devolucionRoutes');
 const userRoutes = require('./routes/user/userRoutes');
 const contratoRoutes = require('./routes/contratoRoutes');
+const trasladoRoutes = require('./routes/trasladoRoutes');
 
 // Usa las rutas
 app.use('/', routesAuth);
@@ -33,6 +34,7 @@ app.use('/tecnico', tecnicoRoutes);
 app.use('/devolucion', devolucionRoutes);
 app.use('/user', userRoutes);
 app.use('/contrato', contratoRoutes);
+app.use('/traslado', trasladoRoutes);
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);

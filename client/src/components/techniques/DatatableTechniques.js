@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { fetchTechniques } from '../../controllers/technique/Datatable';
 import ModaltoAdd from './ModaltoAdd';
 
+
 const columns = [
   { title: 'Id', data: 'Id_tecnico' },
   { title: 'Cédula', data: 'Cedula' },
@@ -47,8 +48,8 @@ const TechniquesTable = () => (
     <Sidebar />
     <DatatableContainer
       columns={columns}
-      fetchData={fetchTechniques} // Asegúrate de que fetchTechniques esté importado y definido correctamente
-      modalComponent={ModaltoAdd} // Asegúrate de que ModalUpdateStock esté importado y definido correctamente
+      fetchData={fetchTechniques}
+      modalComponent={ModaltoAdd} 
       title="Técnicos Registrados"
       TextoButton={"Agregar Nuevo Tecnico"}
       isAdmin={false}

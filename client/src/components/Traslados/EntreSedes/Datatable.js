@@ -1,12 +1,13 @@
 import React from 'react';
 import DatatableContainer from '../../../containers/StockSistema/Datatable';
-import { fetchContrato } from '../../../controllers/Contrato/Datatable';
+import { fetchTraslado } from '../../../controllers/Traslado/Datatable';
 import Sidebar from '../../../containers/Sidebar';
 import ModaltoAdd from './ModalToAdd';
 
 const columns = [
   { title: 'ID', data: 'Id_traslado' },
-  { title: 'Sede', data: 'Sede' },
+  { title: 'Sede Origen', data: 'Sede_origen' },
+  { title: 'Sede Destino', data: 'Sede_destino' },
   { title: 'Material', data: 'Nombre_material' },
   { title: 'Cantidad', data: 'Cantidad' },
   { 
@@ -26,7 +27,7 @@ const EntreSedesTable = () => (
     <Sidebar />
     <DatatableContainer
       columns={columns}
-      fetchData={fetchContrato}
+      fetchData={fetchTraslado}
       modalComponent={ModaltoAdd} 
       title="TRASLADO ENTRE SEDES"
       isAdmin={false}
