@@ -1,5 +1,6 @@
+import Swal from 'sweetalert2';
 import React, { useState, useEffect } from "react";
-import {getMaterials } from "../../../controllers/StockTechnique/addStock";
+import { getMaterials } from "../../../controllers/StockTechnique/addStock";
 import { SaveTraslado } from "../../../controllers/Traslado/SaveTraslado";
 
 const ModaltoAdd = ({ isOpen, onClose }) => {
@@ -24,8 +25,18 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { Sede_origen, Sede_destino, Nombre_material, Cantidad } = materialData;
+
+    if (Sede_origen === Sede_destino) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La sede de origen y destino no pueden ser la misma.',
+      });
+      return;
+    }
+
     try {
-      const { Sede_origen, Sede_destino, Nombre_material, Cantidad } = materialData;
       const response = await SaveTraslado(Sede_origen, Sede_destino, Nombre_material, Cantidad);
       console.log("Operación exitosa:", response);
       onClose();
@@ -34,7 +45,7 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleChange = async (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setMaterialData({
       ...materialData,
@@ -52,7 +63,7 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleMaterialClick = async (material) => {
+  const handleMaterialClick = (material) => {
     setMaterialData({
       ...materialData,
       Nombre_material: material.Nombre_material,
@@ -79,9 +90,9 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
-            <option value="">Selecciona una Sede</option>
-            <option value="Molivento">Molivento</option>
-            <option value="Frailes">Frailes</option>
+              <option value="">Selecciona una Sede</option>
+              <option value="Molivento">Molivento</option>
+              <option value="Frailes">Frailes</option>
             </select>
           </div>
           <div className="mb-4">
@@ -94,9 +105,9 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
-            <option value="">Selecciona una Sede</option>
-            <option value="Molivento">Molivento</option>
-            <option value="Frailes">Frailes</option>
+              <option value="">Selecciona una Sede</option>
+              <option value="Molivento">Molivento</option>
+              <option value="Frailes">Frailes</option>
             </select>
           </div>
           <div className="mb-4">

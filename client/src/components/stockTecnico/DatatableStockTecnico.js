@@ -21,12 +21,17 @@ const columns = [
   }
 ];
 
+const fetchTechniquesFiltered = async () => {
+  const techniques = await fetchTechniques();
+  return techniques.filter(technique => technique.Cantidad > 0);
+};
+
 const TechnicalTable = () => (
   <>
     <Sidebar />
     <DatatableContainer
       columns={columns}
-      fetchData={fetchTechniques}
+      fetchData={fetchTechniquesFiltered}
       modalComponent={ModaltoAdd}
       title="STOCK DEL TÉCNICO"
       isAdmin={false} 

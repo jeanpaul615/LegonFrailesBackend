@@ -20,13 +20,17 @@ const columns = [
     }
   }
 ];
+const fetchTechniquesFiltered = async () => {
+  const techniques = await fetchTechniques();
+  return techniques.filter(technique => technique.Cantidad > 0);
+};
 
 const TecnicoaSistemaTable = () => (
   <>
     <Sidebar />
     <DatatableContainer
       columns={columns}
-      fetchData={fetchTechniques}
+      fetchData={fetchTechniquesFiltered}
       modalComponent={ModaltoAdd} 
       title="TRASLADO TECNICO A SISTEMA"
       isAdmin={false}
