@@ -4,7 +4,6 @@ import axios from "axios";
 export const fetchDevolucion = async () => {
   try {
     const response = await axios.get('http://localhost:5000/devolucion/get-devolucion');
-    console.log(response.data);
     return response.data; // Retorna los datos recibidos desde la API
   } catch (error) {
     console.error('Error al obtener los datos del stock tecnicos:', error);

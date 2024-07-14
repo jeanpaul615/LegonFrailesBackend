@@ -15,7 +15,6 @@ export const getMaterials = async (Nombre_tecnico) => {
     }
 
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error('Error al obtener los materiales:', error);
@@ -31,7 +30,6 @@ export const getTechnicians = async () => {
       throw new Error(`Error en la solicitud: ${response.statusText}`);
     }
     const data = await response.json();
-    console.log(data);
     return data; // Asume que la respuesta es una lista de nombres de técnicos
   } catch (error) {
     console.error('Error al obtener técnicos:', error);
@@ -55,7 +53,6 @@ export const getStockByMaterial = async (Nombre_material, Nombre_tecnico) => {
     }
 
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error('Error al obtener el stock por material:', error);

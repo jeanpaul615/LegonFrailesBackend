@@ -1,7 +1,6 @@
 // Función encargada de agregar un nuevo stock
 import Swal from 'sweetalert2'
 export const addStock = async (stockData) => {
-  console.log(stockData);
 
   try {
     const response = await fetch('http://localhost:5000/stock/add-stocksistema', {
