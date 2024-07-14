@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import legon_banner from "../assets/legon_banner.png";
 import leon_legon from "../assets/leon_legon.png";
 
@@ -7,47 +8,43 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginSuccessful, setLoginSuccessful] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     const data = {
-      username: username,
-      password: password,
+      username,
+      password,
     };
-    fetch("http://localhost:5000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result.token);
-        if (result.token) {
-          localStorage.setItem("token", result.token);
-          setLoginSuccessful(true);
-          navigate("/datatablestock");
-        } else {
-          console.log("error de usuario");
-          setLoginSuccessful(false);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
+
+    try {
+      const response = await axios.post("http://localhost:5000/login", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+      const { token, message } = response.data;
+      
+      if (token) {
+        localStorage.setItem("token", token);
+        setLoginSuccessful(true);
+        navigate("/datatablestock");
+      } else {
+        setError(message || "Error desconocido");
+        setLoginSuccessful(false);
+      }
+    } catch (error) {
+      setError("Error al iniciar sesión. Inténtalo de nuevo.");
+      setLoginSuccessful(false);
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center bg-gray-500 py-12 px-4 sm:px-6 lg:px-8">
       <div className="lg:w-3/2 lg:pr-0.5">
         <div className="p-6 bg-yellow-500 rounded-lg shadow-md hidden md:flex flex-col items-center">
-          <img
-            src={legon_banner}
-            className="h-20 w-48 mb-4"
-            alt="legonbanner"
-          />
+          <img src={legon_banner} className="h-20 w-48 mb-4" alt="legonbanner" />
           <img src={leon_legon} className="h-96 w-72" alt="leonbanner" />
         </div>
       </div>
@@ -65,9 +62,7 @@ export default function Login() {
             <input type="hidden" name="remember" defaultValue="true" />
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
-                <label htmlFor="username" className="sr-only">
-                  Usuario
-                </label>
+                <label htmlFor="username" className="sr-only">Usuario</label>
                 <input
                   id="username"
                   name="username"
@@ -81,9 +76,7 @@ export default function Login() {
                 />
               </div>
               <div>
-                <label htmlFor="password" className="sr-only">
-                  Contraseña
-                </label>
+                <label htmlFor="password" className="sr-only">Contraseña</label>
                 <input
                   id="password"
                   name="password"
@@ -106,19 +99,13 @@ export default function Login() {
                   type="checkbox"
                   className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                 />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-white font-bold"
-                >
-                  Recuerdame
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-white font-bold">
+                  Recuérdame
                 </label>
               </div>
 
               <div className="text-sm">
-                <a
-                  href="/"
-                  className="font-medium text-yellow-600 hover:text-yellow-500"
-                >
+                <a href="/" className="font-medium text-yellow-600 hover:text-yellow-500">
                   ¿Olvidaste tu contraseña?
                 </a>
               </div>
@@ -132,6 +119,7 @@ export default function Login() {
                 Iniciar sesión
               </button>
             </div>
+            {error && <p className="text-red-500 text-sm">{error}</p>}
           </form>
         )}
       </div>

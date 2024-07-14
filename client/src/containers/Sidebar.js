@@ -23,6 +23,9 @@ function Sidebar() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+  }
   return (
     <div className="fixed top-0 left-0 z-40 w-full">
       <div className="border-white border-b-2 bg-slate-800 h-20 items-center flex">
@@ -196,6 +199,7 @@ function Sidebar() {
             <li>
               <a
                 href="/"
+                onClick={handleLogout}
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <svg
