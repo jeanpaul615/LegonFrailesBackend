@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { SaveStockTecnico } from "../../controllers/StockTechnique/SaveStockTecnico";
 import { getTechnicians, getMaterials, getStockByMaterial } from "../../controllers/StockTechnique/addStock"; // Ajusta la ruta según sea necesario
-
 const ModaltoAdd = ({ isOpen, onClose }) => {
   const [materialData, setMaterialData] = useState({
     Nombre_material: "",

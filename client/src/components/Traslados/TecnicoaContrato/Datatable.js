@@ -22,7 +22,9 @@ const columns = [
   }
 ];
 
-const TecnicoaContratoTable = () => (
+const TecnicoaContratoTable = () => {
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
+  return(
   <>
     <Sidebar />
     <DatatableContainer
@@ -30,10 +32,10 @@ const TecnicoaContratoTable = () => (
       fetchData={fetchContrato}
       modalComponent={ModaltoAdd} 
       title="TRASLADO TECNICO A CONTRATO"
-      isAdmin={false}
+      isAdmin={isAdmin}
       TextoButton={"Registrar Nuevo Traslado"}
     />
   </>
-);
+)};
 
 export default TecnicoaContratoTable;

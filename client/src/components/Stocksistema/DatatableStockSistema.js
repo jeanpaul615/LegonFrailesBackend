@@ -1,3 +1,4 @@
+// StocksTable.js
 import React from 'react';
 import DatatableContainer from '../../containers/StockSistema/Datatable';
 import { fetchStocks } from '../../controllers/StockSistema/Datatable';
@@ -10,7 +11,9 @@ const columns = [
   { title: 'Estado', data: 'Estado' }
 ];
 
-const StocksTable = () => (
+const StocksTable = () => {
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
+  return (
   <>
     <Sidebar />
     <DatatableContainer
@@ -18,9 +21,9 @@ const StocksTable = () => (
       fetchData={fetchStocks}
       modalComponent={null} 
       title="MATERIALES DEL SISTEMA"
-      isAdmin={false}
+      isAdmin={isAdmin} // Pasar la función ApisAdmin como prop isAdmin
     />
   </>
 );
-
+}
 export default StocksTable;

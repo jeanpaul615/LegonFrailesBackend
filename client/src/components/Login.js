@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import legon_banner from "../assets/legon_banner.png";
 import leon_legon from "../assets/leon_legon.png";
+import { ApisAdmin } from "../containers/isAdmin";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginSuccessful, setLoginSuccessful] = useState(false);
+  // eslint-disable-next-line
+  const [isAdmin, setIsAdmin] = useState(false); 
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -24,10 +27,15 @@ export default function Login() {
           "Content-Type": "application/json",
         },
       });
+      const responseapi = await ApisAdmin(username);
+      console.log(responseapi);
       const { token, message } = response.data;
-      
+
       if (token) {
         localStorage.setItem("token", token);
+        localStorage.setItem("isAdmin", responseapi); // Almacena isAdmin en localStorage
+        setIsAdmin(responseapi); // Almacena isAdmin en estado local
+
         setLoginSuccessful(true);
         navigate("/datatablestock");
       } else {

@@ -4,6 +4,7 @@ import { fetchTraslado } from '../../../controllers/Traslado/Datatable';
 import Sidebar from '../../../containers/Sidebar';
 import ModaltoAdd from './ModalToAdd';
 
+
 const columns = [
   { title: 'ID', data: 'Id_traslado' },
   { title: 'Sede Origen', data: 'Sede_origen' },
@@ -22,7 +23,9 @@ const columns = [
   }
 ];
 
-const EntreSedesTable = () => (
+const EntreSedesTable = () => {
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
+  return(
   <>
     <Sidebar />
     <DatatableContainer
@@ -30,10 +33,10 @@ const EntreSedesTable = () => (
       fetchData={fetchTraslado}
       modalComponent={ModaltoAdd} 
       title="TRASLADO ENTRE SEDES"
-      isAdmin={false}
+      isAdmin={isAdmin}
       TextoButton={"Registrar Nuevo Traslado"}
     />
   </>
-);
+)};
 
 export default EntreSedesTable;

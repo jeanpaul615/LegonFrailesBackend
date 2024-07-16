@@ -43,7 +43,9 @@ const columns = [
   },
 ];
 
-const TechniquesTable = () => (
+const TechniquesTable = () => {
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
+  return (
   <>
     <Sidebar />
     <DatatableContainer
@@ -52,9 +54,9 @@ const TechniquesTable = () => (
       modalComponent={ModaltoAdd} 
       title="Técnicos Registrados"
       TextoButton={"Agregar Nuevo Tecnico"}
-      isAdmin={false}
+      isAdmin={isAdmin}
     />
   </>
-);
+)};
 
 export default TechniquesTable;

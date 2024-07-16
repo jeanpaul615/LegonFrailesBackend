@@ -11,9 +11,7 @@ const Login = {
             }
 
             if (result.length > 0) {
-                const token = jwt.sign({ username }, "Stack", {
-                    expiresIn: '30m'
-                });
+                const token = jwt.sign({ username }, "Stack");  // Token sin expiración
                 callback(null, { token });
             } else {
                 callback(null, { message: 'Usuario o contraseña incorrectos' });

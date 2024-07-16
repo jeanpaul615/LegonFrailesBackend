@@ -13,7 +13,6 @@ const columns = [
     title: 'Fecha de Modificación', 
     data: 'Fecha_modificacion',
     render: (data) => {
-      // Assuming data is a timestamp, you can format it to dd/mm/yyyy
       const dateObject = new Date(data);
       const formattedDate = `${dateObject.getDate()}/${dateObject.getMonth() + 1}/${dateObject.getFullYear()}`;
       return formattedDate;
@@ -26,7 +25,10 @@ const fetchTechniquesFiltered = async () => {
   return techniques.filter(technique => technique.Cantidad > 0);
 };
 
-const TechnicalTable = () => (
+
+const TechnicalTable = () => {
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
+  return (
   <>
     <Sidebar />
     <DatatableContainer
@@ -34,10 +36,10 @@ const TechnicalTable = () => (
       fetchData={fetchTechniquesFiltered}
       modalComponent={ModaltoAdd}
       title="STOCK DEL TÉCNICO"
-      isAdmin={false} 
+      isAdmin={isAdmin} 
       TextoButton={"Agregar Material al Stock Técnico"}
     />
   </>
-);
+)};
 
 export default TechnicalTable;

@@ -20,18 +20,23 @@ const columns = [
   }
 ];
 
-const RegistroTable = () => (
-  <>
-    <Sidebar />
-    <DatatableContainer
-      columns={columns}
-      fetchData={fetchDevolucion}
-      modalComponent={ModaltoAdd} 
-      TextoButton={"Agregar Materiales al Stock"}
-      title="AGREGAR MATERIALES AL STOCK"
-      isAdmin={false}
-    />
-  </>
-);
+const RegistroTable = () => {
+  // Obtener el estado de isAdmin desde localStorage
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
+
+  return (
+    <>
+      <Sidebar />
+      <DatatableContainer
+        columns={columns}
+        fetchData={fetchDevolucion}
+        modalComponent={ModaltoAdd} 
+        TextoButton={"Agregar Materiales al Stock"}
+        title="AGREGAR MATERIALES AL STOCK"
+        isAdmin={isAdmin} // Pasa el estado de isAdmin como prop
+      />
+    </>
+  );
+};
 
 export default RegistroTable;

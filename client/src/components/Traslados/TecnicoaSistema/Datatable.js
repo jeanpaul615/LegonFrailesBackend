@@ -25,7 +25,9 @@ const fetchTechniquesFiltered = async () => {
   return techniques.filter(technique => technique.Cantidad > 0);
 };
 
-const TecnicoaSistemaTable = () => (
+const TecnicoaSistemaTable = () => {
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
+  return(
   <>
     <Sidebar />
     <DatatableContainer
@@ -33,10 +35,10 @@ const TecnicoaSistemaTable = () => (
       fetchData={fetchTechniquesFiltered}
       modalComponent={ModaltoAdd} 
       title="TRASLADO TECNICO A SISTEMA"
-      isAdmin={false}
+      isAdmin={isAdmin}
       TextoButton={"Traslado Tecnico a Sistema"}
     />
   </>
-);
+)};
 
 export default TecnicoaSistemaTable;

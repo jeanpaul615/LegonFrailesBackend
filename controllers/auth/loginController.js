@@ -13,24 +13,22 @@ exports.login = (req, res) => {
 };
 
 exports.checkAdmin = (req, res) => {
-    try {
-      const token = req.headers['authorization'].split(' ')[1];
-      const decoded = jwt.verify(token, "Stack");
-      const { username } = decoded;
-  
-      Login.checkAdmin(username, (err, result) => {
-        if (err) {
-          return res.status(500).json({ error: 'Error en el servidor' });
-        }
-  
-        if (result.message) {
-          return res.status(404).json({ error: result.message });
-        }
-  
-        res.status(200).json(result);
-      });
-    } catch (error) {
-      res.status(500).json({ error: 'Error en el servidor' });
-    }
-  };
+  try {
+    const { username } = req.body;
+
+    Login.checkAdmin(username, (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error en el servidor' });
+      }
+
+      if (result.message) {
+        return res.status(404).json({ error: result.message });
+      }
+
+      res.status(200).json(result);
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+};
   
