@@ -10,6 +10,7 @@ import TecnicoaContratoTable from './components/Traslados/TecnicoaContrato/Datat
 import TecnicoaSistemaTable from './components/Traslados/TecnicoaSistema/Datatable';
 import EntreSedesTable from './components/Traslados/EntreSedes/Datatable';
 import ProtectedRoute from './ProtectedRoute'; // Importa el componente ProtectedRoute
+import DevolucionTable from './components/Devoluciones/Datatable';
 
 export default function App() {
   return (
@@ -24,6 +25,8 @@ export default function App() {
         <Route exact path='/tecnicoacontrato' element={<ProtectedRoute element={TecnicoaContratoTable} />} />
         <Route exact path='/entresedes' element={<ProtectedRoute element={EntreSedesTable} />} />
         <Route exact path='/tecnicoasistema' element={<ProtectedRoute element={TecnicoaSistemaTable} />} />
+        <Route exact path='/devoluciones' element={<ProtectedRoute element={DevolucionTable} />} />
+
       </Routes>
     </Router>
   );
