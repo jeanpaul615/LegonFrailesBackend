@@ -35,21 +35,17 @@ const Stock = {
     });
   },
 
-  updateStock: (Nombre_material, Cantidad, Estado, callback) => {
-    if (!Nombre_material || !Cantidad || !Estado) {
-      return callback('Faltan campos requeridos', null);
-    }
-
+  updateStock: (Id_stocksistema, Nombre_material, Cantidad, Estado, callback) => {
     const query = 'UPDATE stocksistema SET Nombre_material = ?, Cantidad = ?, Estado = ? WHERE Id_stocksistema = ?';
-    db.query(query, [Id_stocksistema, Nombre_material, Cantidad, Estado], (err, result) => {
+    db.query(query, [Nombre_material, Cantidad, Estado, Id_stocksistema], (err, result) => {
       if (err) {
-        console.error('Error al insertar stock:', err);
+        console.error('Error al actualizar stock:', err);
         return callback(err, null);
       }
-      callback(null, { message: 'Stock agregado correctamente', insertId: result.insertId });
+      callback(null, { message: 'Stock actualizado correctamente', affectedRows: result.affectedRows });
     });
   },
-
+  
   updateStockByMaterial: (Nombre_material, Cantidad, callback) => {
     const query = 'UPDATE stocksistema SET Cantidad = ? WHERE Nombre_material = ?';
     db.query(query, [Cantidad, Nombre_material], (err, result) => {

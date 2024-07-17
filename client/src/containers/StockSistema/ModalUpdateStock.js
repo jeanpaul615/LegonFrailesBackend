@@ -23,14 +23,16 @@ const ModalUpdate = ({ isOpen, onClose, rowData, update }) => {
     onClose();
   };
 
-
   if (!isOpen) return null;
+
+  // Filtra las claves que no deseas mostrar en el modal
+  const filteredKeys = Object.keys(formData).filter(key => key !== 'Fecha_modificacion' && key !== 'Fecha_creacion');
 
   return (
     <div className="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="modal-content bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
         <form onSubmit={handleSubmit}>
-          {Object.keys(formData).map((key) => (
+          {filteredKeys.map((key) => (
             <div key={key} className="mb-4">
               <label className="block mb-2 text-sm font-medium text-gray-700">{key}</label>
               <input

@@ -24,7 +24,6 @@ const columns = [
 ];
 
 const EntreSedesTable = () => {
-  const isAdmin = localStorage.getItem("isAdmin") === "true";
   return(
   <>
     <Sidebar />
@@ -33,7 +32,7 @@ const EntreSedesTable = () => {
       fetchData={fetchTraslado}
       modalComponent={ModaltoAdd} 
       title="TRASLADO ENTRE SEDES"
-      isAdmin={isAdmin}
+      isAdmin={false}
       TextoButton={"Registrar Nuevo Traslado"}
     />
   </>

@@ -1,4 +1,4 @@
-const Contrato = require('../models/Contrato/Contrato');
+const Contrato = require('../Models/Contrato/Contrato');
 
 exports.getAllContratos = (req, res) => {
   Contrato.getAll((err, contratos) => {
@@ -30,10 +30,9 @@ exports.addContrato = (req, res) => {
 };
 
 exports.updateContrato = (req, res) => {
-  const { id } = req.params;
-  const { Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha } = req.body;
+  const { Id_contrato, Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha } = req.body;
 
-  db.updateContratoById(id, { Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha })
+  Contrato.updateContratoById({Id_contrato ,Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha })
     .then(() => {
       res.json({ message: 'Contrato updated' });
     })

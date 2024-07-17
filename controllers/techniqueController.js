@@ -54,10 +54,9 @@ exports.addTechnician = (req, res) => {
 
 
 exports.updateTecnico = (req, res) => {
-  const { id } = req.params;
   const updatedTecnico = req.body;
 
-  Tecnico.update(id, updatedTecnico)
+  Tecnico.update(updatedTecnico)
     .then(result => {
       if (result.affectedRows === 0) {
         return res.status(404).json({ message: 'Tecnico not found' });
@@ -68,6 +67,8 @@ exports.updateTecnico = (req, res) => {
       res.status(500).json({ error: err.message });
     });
 };
+
+
 
 exports.deleteTecnico = (req, res) => {
   const { id } = req.params;

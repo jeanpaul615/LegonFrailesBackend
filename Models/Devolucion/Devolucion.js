@@ -25,9 +25,9 @@ class Devolucion {
     });
   }
 
-  static create(data, callback) {
-    const sql = 'UPDATE devolucion SET Nombre_material = ?, Cantidad = ?, Estado = ?, Fecha = ? WHERE Id_devolucion = ?)'; // Added missing placeholders for Estado
-    connection.query(sql, [data.Nombre_material, data.Cantidad, data.Estado], (err, results) => {
+  static update(data, callback) {
+    const sql = 'UPDATE devolucion SET Nombre_material = ?, Cantidad = ?, Estado = ?, Fecha = ? WHERE Id_devolucion = ?'; // Added missing placeholders for Estado
+    connection.query(sql, [data.Nombre_material, data.Cantidad, data.Estado, data.Fecha, data.Id_devolucion], (err, results) => {
       if (err) {
         console.error('Error inserting into database:', err);
         callback(err, null);

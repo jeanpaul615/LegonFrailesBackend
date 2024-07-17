@@ -30,7 +30,12 @@ const StockController = {
 
   updateStock: (req, res) => {
     const { Id_stocksistema, Nombre_material, Cantidad, Estado } = req.body;
-
+  
+    // Verificar si todos los campos requeridos están presentes
+    if (!Id_stocksistema || !Nombre_material || !Cantidad || !Estado) {
+      return res.status(400).json({ error: 'Faltan campos requeridos' });
+    }
+  
     Stock.updateStock(Id_stocksistema, Nombre_material, Cantidad, Estado, (err, result) => {
       if (err) {
         console.error('Error al actualizar stock:', err);
@@ -39,6 +44,9 @@ const StockController = {
       res.status(200).json({ message: 'Stock actualizado correctamente' });
     });
   },
+  
+  
+  
 
   getCantidadByNombreMaterial: (req, res) => {
     const { Nombre_material } = req.body;

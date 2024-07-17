@@ -61,14 +61,13 @@ const TechniqueController = {
   },
 
   updateTechnique: (req, res) => {
-    const { id } = req.params;
-    const { Nombre_material, Cantidad, Fecha_modificacion } = req.body;
+    const { Id_stocktecnico, Nombre_material, Nombre_tecnico, Cantidad, Fecha_modificacion } = req.body;
 
-    if (!Nombre_material || !Cantidad || !Fecha_modificacion) {
-      return res.status(400).json({ error: 'Los campos Nombre_material, Cantidad y Fecha_modificacion son requeridos.' });
+    if (!Id_stocktecnico || !Nombre_material || !Nombre_tecnico || !Cantidad || !Fecha_modificacion) {
+      return res.status(400).json({ error: 'Los campos Id_stocktecnico, Nombre_material, Nombre_tecnico, Cantidad y Fecha_modificacion son requeridos.' });
     }
 
-    Stock.updateTechnique(id, Nombre_material, Cantidad, Fecha_modificacion, (err) => {
+    Stock.updateTechnique(Id_stocktecnico, Nombre_material, Nombre_tecnico, Cantidad, Fecha_modificacion, (err) => {
       if (err) {
         console.error('Error al actualizar técnica:', err);
         return res.status(500).json({ error: 'Error interno al actualizar técnica' });

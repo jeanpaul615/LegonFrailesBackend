@@ -4,6 +4,7 @@ import DatatableContainer from '../../containers/StockSistema/Datatable';
 import { fetchStocks } from '../../controllers/StockSistema/Datatable';
 import Sidebar from '../../containers/Sidebar';
 import ModalUpdate from '../../containers/StockSistema/ModalUpdateStock';
+import { updateStockSistema } from '../../controllers/Updates/Update';
 
 const columns = [
   { title: 'ID', data: 'Id_stocksistema' },
@@ -20,10 +21,11 @@ const StocksTable = () => {
     <DatatableContainer
       columns={columns}
       fetchData={fetchStocks}
-      modalComponent={null} 
+      ModalComponent={null} 
       ModalUpdate={ModalUpdate}
       title="MATERIALES DEL SISTEMA"
       isAdmin={isAdmin} // Pasar la función ApisAdmin como prop isAdmin
+      update={updateStockSistema}
     />
   </>
 );

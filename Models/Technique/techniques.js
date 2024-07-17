@@ -44,14 +44,15 @@ const Tecnico = {
     });
   },
 
-  update: (id, updatedTecnico) => {
+  update: (updatedTecnico) => {
     return new Promise((resolve, reject) => {
       const query = `
-        UPDATE tecnicos 
+        UPDATE tecnicos
         SET Cedula = ?, Nombre = ?, Telefonos = ?, Fecha_licencia = ?, Vencimiento_licencia = ?, Cargo = ?, Estado = ?, Fecha_modificacion = CURRENT_TIMESTAMP 
         WHERE Id_tecnico = ?
       `;
       const {
+        Id_tecnico,
         Cedula,
         Nombre,
         Telefonos,
@@ -60,7 +61,7 @@ const Tecnico = {
         Cargo,
         Estado
       } = updatedTecnico;
-      db.query(query, [Cedula, Nombre, Telefonos, Fecha_licencia, Vencimiento_licencia, Cargo, Estado, id], (err, results) => {
+      db.query(query, [Cedula, Nombre, Telefonos, Fecha_licencia, Vencimiento_licencia, Cargo, Estado, Id_tecnico], (err, results) => {
         if (err) {
           return reject(err);
         }

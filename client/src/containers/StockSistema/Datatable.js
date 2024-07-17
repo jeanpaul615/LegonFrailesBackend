@@ -98,20 +98,22 @@ const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, M
 
   return (
     <div className="mx-auto mt-36 mb-8 px-4 md:px-8 md:pl-72 rounded-lg border-2 border-gray-300 p-4 overflow-hidden shadow-lg font-semibold text-left">
-      <div>
-        <button onClick={handlePrintPDF} className="md:mr-12 m-4 mr-12 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Imprimir PDF
-        </button>
-        <button onClick={handleExportExcel} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-          Exportar a Excel
-        </button>
+      <div className="mb-4 flex justify-between items-center">
+        <div>
+          <button onClick={handlePrintPDF} className="md:mr-12 m-4 mr-12 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Imprimir PDF
+          </button>
+          <button onClick={handleExportExcel} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Exportar a Excel
+          </button>
+        </div>
         {ModalComponent && (
-          <button onClick={handleAddStock} className="md:ml-96 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+          <button onClick={handleAddStock} className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5">
             {TextoButton}
           </button>
         )}
       </div>
-      <h1 className="text-center text-2xl font-bold mr-28">{title}</h1>
+      <h1 className="text-center text-2xl font-bold mb-4">{title}</h1>
       <table id="datatable" ref={tableRef} className="table-auto w-auto">
         <thead className="bg-gray-800 text-white">
           <tr>

@@ -3,6 +3,8 @@ import DatatableContainer from '../../containers/StockSistema/Datatable';
 import { fetchTechniques } from '../../controllers/StockTechnique/Datatable';
 import Sidebar from '../../containers/Sidebar';
 import ModaltoAdd from './ModaltoAdd';
+import { updateStockTechnique } from '../../controllers/Updates/Update';
+import ModalUpdate from '../../containers/StockSistema/ModalUpdateStock';
 
 const columns = [
   { title: 'Id', data: 'Id_stocktecnico' },
@@ -25,21 +27,23 @@ const fetchTechniquesFiltered = async () => {
   return techniques.filter(technique => technique.Cantidad > 0);
 };
 
-
 const TechnicalTable = () => {
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   return (
-  <>
-    <Sidebar />
-    <DatatableContainer
-      columns={columns}
-      fetchData={fetchTechniquesFiltered}
-      modalComponent={ModaltoAdd}
-      title="STOCK DEL TÉCNICO"
-      isAdmin={isAdmin} 
-      TextoButton={"Agregar Material al Stock Técnico"}
-    />
-  </>
-)};
+    <>
+      <Sidebar />
+      <DatatableContainer
+        columns={columns}
+        fetchData={fetchTechniquesFiltered}
+        ModalComponent={ModaltoAdd} // Corregido el nombre de la propiedad a 'ModalComponent'
+        TextoButton={"Agregar Material al Stock Técnico"}
+        ModalUpdate={ModalUpdate}
+        title="STOCK DEL TÉCNICO"
+        isAdmin={isAdmin}
+        update={updateStockTechnique}
+      />
+    </>
+  );
+};
 
 export default TechnicalTable;

@@ -4,7 +4,7 @@ import { fetchDevolucion } from '../../controllers/Devolucion/Datatable';
 import Sidebar from '../../containers/Sidebar';
 import ModaltoAdd from './ModaltoAdd';
 import ModalUpdate from '../../containers/StockSistema/ModalUpdateStock';
-import UpdateRegistros from '../../controllers/Updates/Update';
+
 const columns = [
   { title: 'ID', data: 'Id_devolucion' },
   { title: 'Nombre del Material', data: 'Nombre_material' },
@@ -22,8 +22,6 @@ const columns = [
 ];
 
 const RegistroTable = () => {
-  // Obtener el estado de isAdmin desde localStorage
-  const isAdmin = localStorage.getItem("isAdmin") === "true";
 
   return (
     <>
@@ -35,8 +33,7 @@ const RegistroTable = () => {
         ModalComponent={ModaltoAdd} 
         TextoButton={"Agregar Materiales al Stock"}
         title="AGREGAR MATERIALES AL STOCK"
-        isAdmin={isAdmin} 
-        update={UpdateRegistros}
+        isAdmin={false} 
       />
     </>
   );

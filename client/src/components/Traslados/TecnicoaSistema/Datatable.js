@@ -26,7 +26,6 @@ const fetchTechniquesFiltered = async () => {
 };
 
 const TecnicoaSistemaTable = () => {
-  const isAdmin = localStorage.getItem("isAdmin") === "true";
   return(
   <>
     <Sidebar />
@@ -35,7 +34,7 @@ const TecnicoaSistemaTable = () => {
       fetchData={fetchTechniquesFiltered}
       modalComponent={ModaltoAdd} 
       title="TRASLADO TECNICO A SISTEMA"
-      isAdmin={isAdmin}
+      isAdmin={false}
       TextoButton={"Traslado Tecnico a Sistema"}
     />
   </>

@@ -4,6 +4,8 @@ import Sidebar from '../../containers/Sidebar';
 import { format } from 'date-fns';
 import { fetchTechniques } from '../../controllers/technique/Datatable';
 import ModaltoAdd from './ModaltoAdd';
+import { updateTecnico } from '../../controllers/Updates/Update';
+import ModalUpdate from '../../containers/StockSistema/ModalUpdateStock';
 
 
 const columns = [
@@ -51,10 +53,12 @@ const TechniquesTable = () => {
     <DatatableContainer
       columns={columns}
       fetchData={fetchTechniques}
-      modalComponent={ModaltoAdd} 
+      ModalComponent={ModaltoAdd} 
+      ModalUpdate={ModalUpdate}
       title="Técnicos Registrados"
       TextoButton={"Agregar Nuevo Tecnico"}
       isAdmin={isAdmin}
+      update={updateTecnico}
     />
   </>
 )};

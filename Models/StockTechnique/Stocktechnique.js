@@ -37,9 +37,9 @@ const StockTechnique = {
     });
   },
 
-  updateTechnique: (id, Nombre_material, Cantidad, Fecha_modificacion, callback) => {
-    const sql = 'UPDATE stocktecnico SET Nombre_material = ?, Cantidad = ?, Fecha_modificacion = ? WHERE Id_stocktecnico = ?';
-    db.query(sql, [Nombre_material, Cantidad, Fecha_modificacion, id], (err, result) => {
+  updateTechnique: (Id_stocktecnico, Nombre_material, Nombre_tecnico, Cantidad, Fecha_modificacion, callback) => {
+    const sql = 'UPDATE stocktecnico SET Nombre_material = ?, Nombre_tecnico = ?, Cantidad = ?, Fecha_modificacion = ? WHERE Id_stocktecnico = ?';
+    db.query(sql, [Nombre_material, Nombre_tecnico, Cantidad, Fecha_modificacion, Id_stocktecnico], (err, result) => {
       if (err) {
         console.error('Error al actualizar técnica:', err);
         callback(err, null);

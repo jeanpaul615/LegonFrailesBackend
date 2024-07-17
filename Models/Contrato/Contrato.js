@@ -24,10 +24,10 @@ class Contrato {
     });
   }
 
-  static updateContratoById = (id, { Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha }) => {
+  static updateContratoById = ({Id_contrato, Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha }) => {
     return new Promise((resolve, reject) => {
       const query = 'UPDATE contratos SET Nombre_contrato = ?, Nombre_tecnico = ?, Nombre_material = ?, Cantidad = ?, Fecha = ? WHERE Id_contrato = ?';
-      db.query(query, [Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha, id], (err, results) => {
+      connection.query(query, [Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha, Id_contrato], (err, results) => {
         if (err) {
           return reject(err);
         }

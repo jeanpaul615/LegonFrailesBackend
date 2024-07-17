@@ -32,20 +32,21 @@ exports.createDevolucion = (req, res) => {
 
 
 exports.updateDevolucion = (req, res) => {
-  const { Nombre_material, Cantidad, Estado } = req.body;
+  const { Nombre_material, Cantidad, Estado, Fecha, Id_devolucion } = req.body;
 
-  if (!Nombre_material || !Cantidad || !Estado) {
-    return res.status(400).json({ error: 'Nombre_material, Cantidad, and Estado are required' });
+  if (!Nombre_material || !Cantidad || !Estado || !Fecha || !Id_devolucion) { // Changed comma to ||
+    return res.status(400).json({ error: 'Nombre_material, Cantidad, Estado, Fecha, and Id_devolucion are required' });
   }
 
-  const Devolucion = { Nombre_material, Cantidad, Estado };
+  const updateDevolucion = { Nombre_material, Cantidad, Estado, Fecha, Id_devolucion };
 
-  Devolucion.create(Devolucion, (err, result) => {
+  Devolucion.update(updateDevolucion, (err, result) => {
     if (err) {
-      console.error('Error creating devolucion:', err);
-      res.status(500).json({ error: 'Error inserting into database' });
+      console.error('Error updating devolucion:', err);
+      res.status(500).json({ error: 'Error updating database' });
       return;
     }
-    res.status(201).json({ message: 'Devolucion created successfully', id: result.insertId });
+    res.status(200).json({ message: 'Devolucion updated successfully', id: result.insertId });
   });
 };
+

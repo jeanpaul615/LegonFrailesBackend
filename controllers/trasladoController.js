@@ -31,3 +31,18 @@ exports.addTraslado = (req, res) => {
     res.json({ id: trasladoId, ...trasladoData });
   });
 };
+
+exports.updateTraslado = (req, res) => {
+  const updatedTraslado = req.body;
+
+  Traslado.update(updatedTraslado)
+    .then(result => {
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Traslado not found' });
+      }
+      res.json({ message: 'Traslado updated' });
+    })
+    .catch(err => {
+      res.status(500).json({ error: err.message });
+    });
+};
