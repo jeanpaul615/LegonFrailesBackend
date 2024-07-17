@@ -14,7 +14,7 @@ const Tecnico = {
 
   getById: (id) => {
     return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM tecnicos WHERE Id_tecnico = ?', id, (err, results) => {
+      db.query('SELECT * FROM tecnicos WHERE Id_tecnico = ?', [id], (err, results) => {
         if (err) {
           return reject(err);
         }
@@ -46,22 +46,36 @@ const Tecnico = {
 
   update: (id, updatedTecnico) => {
     return new Promise((resolve, reject) => {
-      db.query('UPDATE tecnicos SET ? WHERE Id_tecnico = ?', [updatedTecnico, id], (err, results) => {
+      const query = `
+        UPDATE tecnicos 
+        SET Cedula = ?, Nombre = ?, Telefonos = ?, Fecha_licencia = ?, Vencimiento_licencia = ?, Cargo = ?, Estado = ?, Fecha_modificacion = CURRENT_TIMESTAMP 
+        WHERE Id_tecnico = ?
+      `;
+      const {
+        Cedula,
+        Nombre,
+        Telefonos,
+        Fecha_licencia,
+        Vencimiento_licencia,
+        Cargo,
+        Estado
+      } = updatedTecnico;
+      db.query(query, [Cedula, Nombre, Telefonos, Fecha_licencia, Vencimiento_licencia, Cargo, Estado, id], (err, results) => {
         if (err) {
           return reject(err);
         }
-        resolve({ message: 'Tecnico updated' });
+        resolve({ message: 'Tecnico updated', affectedRows: results.affectedRows });
       });
     });
   },
 
   delete: (id) => {
     return new Promise((resolve, reject) => {
-      db.query('DELETE FROM tecnicos WHERE Id_tecnico = ?', id, (err, results) => {
+      db.query('DELETE FROM tecnicos WHERE Id_tecnico = ?', [id], (err, results) => {
         if (err) {
           return reject(err);
         }
-        resolve({ message: 'Tecnico deleted' });
+        resolve({ message: 'Tecnico deleted', affectedRows: results.affectedRows });
       });
     });
   }

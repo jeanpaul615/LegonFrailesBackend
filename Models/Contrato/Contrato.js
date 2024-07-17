@@ -23,6 +23,18 @@ class Contrato {
       callback(null, { message: 'Contrato agregado correctamente', insertId: result.insertId });
     });
   }
+
+  static updateContratoById = (id, { Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha }) => {
+    return new Promise((resolve, reject) => {
+      const query = 'UPDATE contratos SET Nombre_contrato = ?, Nombre_tecnico = ?, Nombre_material = ?, Cantidad = ?, Fecha = ? WHERE Id_contrato = ?';
+      db.query(query, [Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha, id], (err, results) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(results);
+      });
+    });
+  }
 }
 
 module.exports = Contrato;

@@ -3,7 +3,8 @@ import DatatableContainer from '../../containers/StockSistema/Datatable';
 import { fetchDevolucion } from '../../controllers/Devolucion/Datatable';
 import Sidebar from '../../containers/Sidebar';
 import ModaltoAdd from './ModaltoAdd';
-
+import ModalUpdate from '../../containers/StockSistema/ModalUpdateStock';
+import UpdateRegistros from '../../controllers/Updates/Update';
 const columns = [
   { title: 'ID', data: 'Id_devolucion' },
   { title: 'Nombre del Material', data: 'Nombre_material' },
@@ -30,10 +31,12 @@ const RegistroTable = () => {
       <DatatableContainer
         columns={columns}
         fetchData={fetchDevolucion}
-        modalComponent={ModaltoAdd} 
+        ModalUpdate={ModalUpdate}
+        ModalComponent={ModaltoAdd} 
         TextoButton={"Agregar Materiales al Stock"}
         title="AGREGAR MATERIALES AL STOCK"
-        isAdmin={isAdmin} // Pasa el estado de isAdmin como prop
+        isAdmin={isAdmin} 
+        update={UpdateRegistros}
       />
     </>
   );

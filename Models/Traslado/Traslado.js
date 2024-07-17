@@ -18,6 +18,8 @@ const Traslado = {
       callback(null, result.insertId);
     });
   }
+
+  
 };
 
 module.exports = Traslado;

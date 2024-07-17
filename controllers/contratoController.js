@@ -28,3 +28,16 @@ exports.addContrato = (req, res) => {
     res.json(result);
   });
 };
+
+exports.updateContrato = (req, res) => {
+  const { id } = req.params;
+  const { Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha } = req.body;
+
+  db.updateContratoById(id, { Nombre_contrato, Nombre_tecnico, Nombre_material, Cantidad, Fecha })
+    .then(() => {
+      res.json({ message: 'Contrato updated' });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
+};

@@ -29,8 +29,7 @@ const StockController = {
   },
 
   updateStock: (req, res) => {
-    const { Id_stocksistema } = req.params;
-    const { Nombre_material, Cantidad, Estado } = req.body;
+    const { Id_stocksistema, Nombre_material, Cantidad, Estado } = req.body;
 
     Stock.updateStock(Id_stocksistema, Nombre_material, Cantidad, Estado, (err, result) => {
       if (err) {

@@ -6,9 +6,11 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 
-const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, modalComponent: ModalComponent }) => {
+const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, ModalComponent, ModalUpdate, update }) => {
   const [data, setData] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const tableRef = useRef(null);
   const dataTable = useRef(null);
@@ -54,6 +56,12 @@ const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, m
         autoWidth: true
       });
 
+      $('#datatable').on('click', 'button.update-btn', function () {
+        const row = dataTable.current.row($(this).parents('tr')).data();
+        setSelectedRow(row);
+        setIsModalUpdateOpen(true);
+      });
+
       return () => {
         if (dataTable.current) {
           dataTable.current.destroy(true);
@@ -76,11 +84,16 @@ const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, m
   };
 
   const handleAddStock = () => {
-    setIsModalOpen(true);
+    setSelectedRow(null);
+    setIsModalAddOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseModalAdd = () => {
+    setIsModalAddOpen(false);
+  };
+
+  const handleCloseModalUpdate = () => {
+    setIsModalUpdateOpen(false);
   };
 
   return (
@@ -124,10 +137,19 @@ const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, m
         </tbody>
       </table>
 
-      {isModalOpen && ModalComponent && (
+      {isModalAddOpen && ModalComponent && (
         <ModalComponent
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
+          isOpen={isModalAddOpen}
+          onClose={handleCloseModalAdd}
+        />
+      )}
+
+      {isModalUpdateOpen && ModalUpdate && (
+        <ModalUpdate
+          isOpen={isModalUpdateOpen}
+          onClose={handleCloseModalUpdate}
+          rowData={selectedRow}
+          update={update}
         />
       )}
     </div>
