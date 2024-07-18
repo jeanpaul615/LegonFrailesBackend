@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { AddDevolucion } from "../../controllers/Devolver/Datatable";
+import { AddDatatable, AddDevolucion } from "../../controllers/Devolver/Datatable";
 import { fetchStocks } from "../../controllers/StockSistema/Datatable";
+import {  getStockByMaterial } from "../../controllers/StockTechnique/addStock";
 
 const ModaltoAdd = ({ isOpen, onClose }) => {
   const [materialData, setMaterialData] = useState({
@@ -26,8 +27,9 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
     e.preventDefault();
     try {
       const { Nombre_material, Cantidad, Estado } = materialData;
-      const response = await AddDevolucion(Nombre_material, Cantidad, Estado);
-      console.log("Operación exitosa:", response);
+      const response = await AddDevolucion(Nombre_material, Cantidad);
+      const response2 = await AddDatatable(Nombre_material, Cantidad, Estado);
+      console.log("Operación exitosa:", response, response2);
       onClose(); // Cierra el modal después de agregar
     } catch (error) {
       console.error("Error al realizar la operación:", error);
@@ -58,6 +60,20 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
       ...materialData,
       Nombre_material: material.Nombre_material
     });
+
+    try {
+      const stock = await getStockByMaterial(material.Nombre_material);
+      setMaterialData((prevData) => ({
+        ...prevData,
+        Stock: stock
+      }));
+    } catch (error) {
+      console.error("Error fetching stock by material:", error);
+      setMaterialData((prevData) => ({
+        ...prevData,
+        Stock: 0 
+      }));
+    }
 
     setFilteredMaterials([]); // Cierra la lista filtrada después de seleccionar un material
   };

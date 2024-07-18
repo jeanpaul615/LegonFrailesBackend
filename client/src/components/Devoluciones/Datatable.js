@@ -1,6 +1,6 @@
 import React from 'react';
 import DatatableContainer from '../../containers/StockSistema/Datatable';
-import { fetchDevolucion } from '../../controllers/Devolucion/Datatable';
+import { fetchDevolver } from '../../controllers/Devolver/Datatable';
 import Sidebar from '../../containers/Sidebar';
 import ModaltoAdd from './ModaltoAdd';
 import ModalUpdate from '../../containers/StockSistema/ModalUpdateStock';
@@ -9,6 +9,8 @@ const columns = [
   { title: 'ID', data: 'Id_devolucion' },
   { title: 'Nombre del Material', data: 'Nombre_material' },
   { title: 'Cantidad', data: 'Cantidad' },
+  { title: 'Estado', data: 'Estado' },
+
   { 
     title: 'Fecha de Registro', 
     data: 'Fecha',
@@ -28,7 +30,7 @@ const DevolucionTable = () => {
       <Sidebar />
       <DatatableContainer
         columns={columns}
-        fetchData={fetchDevolucion}
+        fetchData={fetchDevolver}
         ModalUpdate={ModalUpdate}
         ModalComponent={ModaltoAdd} 
         TextoButton={"Devolver Materiales"}

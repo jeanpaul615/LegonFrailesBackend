@@ -25,9 +25,11 @@ const devolucionRoutes = require('./routes/devolucionRoutes');
 const userRoutes = require('./routes/user/userRoutes');
 const contratoRoutes = require('./routes/contratoRoutes');
 const trasladoRoutes = require('./routes/trasladoRoutes');
+const devolverRoutes = require('./routes/devolverRoutes');
 
 // Usa las rutas
 app.use('/', routesAuth);
+app.use('/devolver',devolverRoutes);
 app.use('/stock', routesStock);
 app.use('/stocktechnique', routesStockTechnique);
 app.use('/tecnico', tecnicoRoutes);
