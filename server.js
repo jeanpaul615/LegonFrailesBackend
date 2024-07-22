@@ -17,15 +17,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Importa las rutas
-const routesAuth = require('./routes/auth/authRoutes');
-const routesStock = require('./routes/stockRoutes');
-const routesStockTechnique = require('./routes/stocktechniqueRoutes');
-const tecnicoRoutes = require('./routes/tecnicoRoutes');
-const devolucionRoutes = require('./routes/devolucionRoutes');
-const userRoutes = require('./routes/user/userRoutes');
-const contratoRoutes = require('./routes/contratoRoutes');
-const trasladoRoutes = require('./routes/trasladoRoutes');
-const devolverRoutes = require('./routes/devolverRoutes');
+const routesAuth = require('./src/routes/auth/authRoutes');
+const routesStock = require('./src/routes/stockRoutes');
+const routesStockTechnique = require('./src/routes/stocktechniqueRoutes');
+const tecnicoRoutes = require('./src/routes/tecnicoRoutes');
+const devolucionRoutes = require('./src/routes/transactions/refundRoutes');
+const userRoutes = require('./src/routes/user/userRoutes');
+const contratoRoutes = require('./src/routes/agreementRoutes');
+const trasladoRoutes = require('./src/routes/transferRoutes');
+const devolverRoutes = require('./src/routes/transactions/sendBackRoutes');
 
 // Usa las rutas
 app.use('/', routesAuth);
