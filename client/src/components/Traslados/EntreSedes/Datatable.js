@@ -4,7 +4,6 @@ import { fetchTraslado } from '../../../controllers/Traslado/Datatable';
 import Sidebar from '../../../containers/Sidebar';
 import ModaltoAdd from './ModalToAdd';
 
-
 const columns = [
   { title: 'ID', data: 'Id_traslado' },
   { title: 'Sede Origen', data: 'Sede_origen' },
@@ -15,7 +14,6 @@ const columns = [
     title: 'Fecha de Traslado', 
     data: 'Fecha',
     render: (data) => {
-      // Assuming data is a timestamp, you can format it to dd/mm/yyyy
       const dateObject = new Date(data);
       const formattedDate = `${dateObject.getDate()}/${dateObject.getMonth() + 1}/${dateObject.getFullYear()}`;
       return formattedDate;
@@ -24,18 +22,19 @@ const columns = [
 ];
 
 const EntreSedesTable = () => {
-  return(
-  <>
-    <Sidebar />
-    <DatatableContainer
-      columns={columns}
-      fetchData={fetchTraslado}
-      modalComponent={ModaltoAdd} 
-      title="TRASLADO ENTRE SEDES"
-      isAdmin={false}
-      TextoButton={"Registrar Nuevo Traslado"}
-    />
-  </>
-)};
+  return (
+    <>
+      <Sidebar />
+      <DatatableContainer
+        columns={columns}
+        fetchData={fetchTraslado}
+        ModalComponent={ModaltoAdd} 
+        title="TRASLADO ENTRE SEDES"
+        isAdmin={false}
+        TextoButton="Registrar Nuevo Traslado Entre Sedes"
+      />
+    </>
+  );
+};
 
 export default EntreSedesTable;

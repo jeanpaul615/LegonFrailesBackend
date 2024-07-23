@@ -7,14 +7,14 @@ import ModaltoAdd from './ModaltoAdd';
 const columns = [
   { title: 'ID', data: 'Id_contrato' },
   { title: 'N° Contrato', data: 'Nombre_contrato' },
-  { title: 'Nombre Tecnico', data: 'Nombre_tecnico' },
+  { title: 'Nombre Técnico', data: 'Nombre_tecnico' },
   { title: 'Material', data: 'Nombre_material' },
   { title: 'Cantidad', data: 'Cantidad' },
   { 
     title: 'Fecha de Instalación', 
     data: 'Fecha',
     render: (data) => {
-      // Assuming data is a timestamp, you can format it to dd/mm/yyyy
+      // Asumiendo que data es un timestamp, puedes formatearlo a dd/mm/yyyy
       const dateObject = new Date(data);
       const formattedDate = `${dateObject.getDate()}/${dateObject.getMonth() + 1}/${dateObject.getFullYear()}`;
       return formattedDate;
@@ -23,18 +23,19 @@ const columns = [
 ];
 
 const TecnicoaContratoTable = () => {
-  return(
-  <>
-    <Sidebar />
-    <DatatableContainer
-      columns={columns}
-      fetchData={fetchContrato}
-      modalComponent={ModaltoAdd} 
-      title="TRASLADO TECNICO A CONTRATO"
-      isAdmin={false}
-      TextoButton={"Registrar Nuevo Traslado"}
-    />
-  </>
-)};
+  return (
+    <>
+      <Sidebar />
+      <DatatableContainer
+        columns={columns}
+        fetchData={fetchContrato}
+        ModalComponent={ModaltoAdd}
+        title="TRASLADO TÉCNICO A CONTRATO"
+        isAdmin={false}
+        TextoButton="Registrar Nuevo Traslado a Contrato"
+      />
+    </>
+  );
+};
 
 export default TecnicoaContratoTable;
