@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from "react";
-import { getTechnicians, getMaterials, getStockByMaterial,submitContrato } from "../../../controllers/Contrato/addStock"; // Ajusta la ruta según sea necesario
+import { getTechnicians, getMaterials, getStockByMaterial, submitContrato } from "../../../controllers/Contrato/addStock"; // Ajusta la ruta según sea necesario
 
 const ModaltoAdd = ({ isOpen, onClose }) => {
   const [contractData, setContractData] = useState({
@@ -17,9 +18,9 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     const fetchTechniciansAndMaterials = async () => {
-      const techs = await getTechnicians();// Filtrar técnicos activos
+      const techs = await getTechnicians(); // Filtrar técnicos activos
       setTechnicians(techs || []);
-      const mats = await getMaterials(contractData.Nombre_tecnico);
+      const mats = await getMaterials(contractData.Nombre_tecnico); // Filtrar materiales que su cantidad es mayor a 0
       setMaterials(mats || []);
     };
 
@@ -63,7 +64,7 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
       const stock = await getStockByMaterial(Nombre_material, Nombre_tecnico);
       setContractData((prevState) => ({
         ...prevState,
-        Stock: stock.cantidad
+        Stock: stock
       }));
     } catch (error) {
       console.error("Error al obtener el stock por material:", error);
@@ -95,9 +96,7 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
     e.preventDefault();
     const data = await submitContrato(contractData.Nombre_contrato, contractData.Nombre_material, contractData.Nombre_tecnico, contractData.Cantidad);
     console.log(data);
-};
-
-
+  };
 
   if (!isOpen) return null;
 

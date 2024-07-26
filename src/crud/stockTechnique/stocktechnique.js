@@ -25,11 +25,11 @@ const StockTechnique = {
     });
   },
 
-  deleteTechnique: (id, callback) => {
-    const sql = 'DELETE FROM stocktecnico WHERE Id_stocktecnico = ?';
-    db.query(sql, [id], (err, result) => {
+  updateTechnique: (Id_stocktecnico, Nombre_material, Nombre_tecnico, Cantidad, Fecha_modificacion, callback) => {
+    const sql = 'UPDATE stocktecnico SET Nombre_material = ?, Nombre_tecnico = ?, Cantidad = ?, Fecha_modificacion = ? WHERE Id_stocktecnico = ?';
+    db.query(sql, [Nombre_material, Nombre_tecnico, Cantidad, Fecha_modificacion, Id_stocktecnico], (err, result) => {
       if (err) {
-        console.error('Error al eliminar técnica:', err);
+        console.error('Error al actualizar técnica:', err);
         callback(err, null);
       } else {
         callback(null, result);
@@ -37,11 +37,11 @@ const StockTechnique = {
     });
   },
 
-  updateTechnique: (Id_stocktecnico, Nombre_material, Nombre_tecnico, Cantidad, Fecha_modificacion, callback) => {
-    const sql = 'UPDATE stocktecnico SET Nombre_material = ?, Nombre_tecnico = ?, Cantidad = ?, Fecha_modificacion = ? WHERE Id_stocktecnico = ?';
-    db.query(sql, [Nombre_material, Nombre_tecnico, Cantidad, Fecha_modificacion, Id_stocktecnico], (err, result) => {
+  deleteTechnique: (id, callback) => {
+    const sql = 'DELETE FROM stocktecnico WHERE Id_stocktecnico = ?';
+    db.query(sql, [id], (err, result) => {
       if (err) {
-        console.error('Error al actualizar técnica:', err);
+        console.error('Error al eliminar técnica:', err);
         callback(err, null);
       } else {
         callback(null, result);
@@ -74,7 +74,7 @@ const StockTechnique = {
   },
 
   getMaterialsByTecnico: (Nombre_tecnico, callback) => {
-    const sql = 'SELECT Nombre_material FROM stocktecnico WHERE Nombre_tecnico = ?';
+    const sql = 'SELECT Nombre_material FROM stocktecnico WHERE Nombre_tecnico = ? AND Cantidad > 0';
     db.query(sql, [Nombre_tecnico], (err, results) => {
       if (err) {
         console.error('Error al obtener materiales por técnico:', err);

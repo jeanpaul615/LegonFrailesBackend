@@ -20,7 +20,8 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
       const filteredTechs = techs.filter(tech => tech.Estado === 1); // Filtrar técnicos activos
       setTechnicians(filteredTechs || []);
       const mats = await getMaterials();
-      setMaterials(mats || []);
+      const filteredMats = mats.filter(mats => mats.Cantidad > 1); // Filtrar materiales que su cantidad es mayor a 0
+      setMaterials(filteredMats || []);
     };
 
     fetchTechniciansAndMaterials();

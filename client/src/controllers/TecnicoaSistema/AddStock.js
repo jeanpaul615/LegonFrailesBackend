@@ -2,7 +2,6 @@ import axios from "axios";
 import qs from 'qs';
 import swal from 'sweetalert2'; // Importa SweetAlert2
 
-// Función encargada de obtener materiales por técnico
 export const getMaterials = async (Nombre_tecnico) => {
   try {
     const response = await fetch('http://localhost:5000/stocktechnique/materials-by-tecnico', {
@@ -10,20 +9,16 @@ export const getMaterials = async (Nombre_tecnico) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ Nombre_tecnico })
+      body: JSON.stringify({ Nombre_tecnico }) // Asegúrate de que esto coincide con lo que espera el backend
     });
-
-    if (!response.ok) {
-      throw new Error(`Error en la solicitud: ${response.statusText}`);
-    }
-
     const data = await response.json();
-    return data;
+    return data; // Asegúrate de que los datos devueltos están en el formato esperado
   } catch (error) {
     console.error('Error al obtener los materiales:', error);
     throw error;
   }
 };
+
 
 // Función para obtener la lista de técnicos
 export const getTechnicians = async () => {

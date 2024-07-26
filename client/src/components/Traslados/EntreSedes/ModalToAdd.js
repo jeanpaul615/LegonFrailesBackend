@@ -2,12 +2,14 @@ import Swal from 'sweetalert2';
 import React, { useState, useEffect } from "react";
 import { getMaterials } from "../../../controllers/StockTechnique/addStock";
 import { SaveTraslado } from "../../../controllers/Traslado/SaveTraslado";
+import {  getStockByMaterial } from "../../../controllers/StockTechnique/addStock";
 
 const ModaltoAdd = ({ isOpen, onClose }) => {
   const [materialData, setMaterialData] = useState({
     Sede_origen: "",
     Sede_destino: "",
     Nombre_material: "",
+    Stock: 0,
     Cantidad: 0,
   });
 
@@ -63,15 +65,29 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleMaterialClick = (material) => {
+  const handleMaterialClick = async (material) => {
     setMaterialData({
       ...materialData,
-      Nombre_material: material.Nombre_material,
-      Id_stocksistema: material.Id_stocksistema
+      Nombre_material: material.Nombre_material
     });
 
-    setFilteredMaterials([]);
+    try {
+      const stock = await getStockByMaterial(material.Nombre_material);
+      setMaterialData((prevData) => ({
+        ...prevData,
+        Stock: stock
+      }));
+    } catch (error) {
+      console.error("Error fetching stock by material:", error);
+      setMaterialData((prevData) => ({
+        ...prevData,
+        Stock: 0 
+      }));
+    }
+
+    setFilteredMaterials([]); // Cierra la lista filtrada después de seleccionar un material
   };
+  
 
   if (!isOpen) return null;
 
@@ -133,6 +149,18 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
                 ))}
               </ul>
             )}
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2 text-sm font-medium text-gray-700">Stock</label>
+            <input
+              type="number"
+              name="Stock"
+              value={materialData.Stock}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+              readOnly
+            />
           </div>
           <div className="mb-4">
             <label className="block mb-2 text-sm font-medium text-gray-700">Cantidad</label>

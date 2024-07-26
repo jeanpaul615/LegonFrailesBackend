@@ -32,12 +32,10 @@ export const SaveStockTecnico = async (Id_stocktecnico, Nombre_material, Cantida
       }
     });
 
-    // Recargar la página después de completar ambas operaciones
     window.location.reload();
-
     return { success: true, responseStockTecnico, responseStockSistema };
   } catch (error) {
-    console.error('Error al guardar en stocktecnico o actualizar stocksistema:', error);
-    return { success: false, error };
+    console.error('Error al guardar en stocktecnico o actualizar stocktecnico:', error.message);
+    return { success: false, error: error.message };
   }
 };

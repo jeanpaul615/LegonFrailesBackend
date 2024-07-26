@@ -18,8 +18,11 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
     const fetchTechniciansAndMaterials = async () => {
       const techs = await getTechnicians();
       setTechnicians(techs || []);
-      const mats = await getMaterials(materialData.Nombre_tecnico); // Debes ajustar cómo obtienes los materiales según el técnico seleccionado
-      setMaterials(mats || []);
+    
+      if (materialData.Nombre_tecnico) { // Solo llamar si Nombre_tecnico no está vacío
+        const mats = await getMaterials(materialData.Nombre_tecnico);
+        setMaterials(mats || []);
+      }
     };
 
     fetchTechniciansAndMaterials();

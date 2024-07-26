@@ -29,7 +29,7 @@ const TechniqueController = {
 
       if (existingTechnique) {
         const nuevaCantidad = existingTechnique.Cantidad + parseInt(Cantidad);
-        Stock.updateTechnique(existingTechnique.Id_stocktecnico, Nombre_material, nuevaCantidad, Fecha_modificacion, (err) => {
+        Stock.updateTechnique(existingTechnique.Id_stocktecnico, Nombre_material, Nombre_tecnico, nuevaCantidad, Fecha_modificacion, (err) => {
           if (err) {
             console.error('Error al actualizar técnica existente:', err);
             return res.status(500).json({ error: 'Error interno al actualizar técnica existente' });
@@ -47,7 +47,7 @@ const TechniqueController = {
       }
     });
   },
-
+  
   deleteTechnique: (req, res) => {
     const { id } = req.params;
 
@@ -111,9 +111,6 @@ const TechniqueController = {
       if (existingTechnique) {
         const nuevaCantidad = existingTechnique.Cantidad - parseInt(Cantidad);
 
-        if (nuevaCantidad < 0) {
-          return res.status(400).json({ error: 'La cantidad a restar es mayor que la cantidad disponible en el stock.' });
-        }
 
         Stock.updateCantidadStockTechnique(Nombre_material, Nombre_tecnico, Cantidad, (err) => {
           if (err) {
