@@ -9,7 +9,6 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginSuccessful, setLoginSuccessful] = useState(false);
-  // eslint-disable-next-line
   const [isAdmin, setIsAdmin] = useState(false); 
   const [error, setError] = useState("");
   const navigate = useNavigate();
