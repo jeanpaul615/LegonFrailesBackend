@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { getTechnicians, getMaterials, getStockByMaterial, submitContrato } from "../../../controllers/Contrato/addStock"; // Ajusta la ruta según sea necesario
 
@@ -20,8 +19,11 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
     const fetchTechniciansAndMaterials = async () => {
       const techs = await getTechnicians(); // Filtrar técnicos activos
       setTechnicians(techs || []);
-      const mats = await getMaterials(contractData.Nombre_tecnico); // Filtrar materiales que su cantidad es mayor a 0
-      setMaterials(mats || []);
+
+      if (contractData.Nombre_tecnico) {
+        const mats = await getMaterials(contractData.Nombre_tecnico); // Filtrar materiales que su cantidad es mayor a 0
+        setMaterials(mats || []);
+      }
     };
 
     fetchTechniciansAndMaterials();
@@ -38,24 +40,18 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
       fetchStock(value, contractData.Nombre_tecnico);
     }
 
-    if (name === "Nombre_material" && value.trim().length > 0) {
+    if (name === "Nombre_material") {
       setFilteredMaterials(
         materials.filter((material) =>
           material.Nombre_material.toLowerCase().includes(value.toLowerCase())
         )
       );
-    } else {
-      setFilteredMaterials([]);
-    }
-
-    if (name === "Nombre_tecnico" && value.trim().length > 0) {
+    } else if (name === "Nombre_tecnico") {
       setFilteredTechnicians(
         technicians.filter((technician) =>
           technician.Nombre_tecnico.toLowerCase().includes(value.toLowerCase())
         )
       );
-    } else {
-      setFilteredTechnicians([]);
     }
   };
 
@@ -76,11 +72,27 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleMaterialClick = (material) => {
-    setContractData((prevState) => ({
-      ...prevState,
-      Nombre_material: material.Nombre_material
-    }));
+  const handleMaterialClick = async (material) => {
+    setContractData({
+      ...contractData,
+      Nombre_material: material.Nombre_material,
+      Id_stocksistema: material.Id_stocksistema // Asegúrate de tener el Id_stocksistema necesario
+    });
+
+    try {
+      const stock = await getStockByMaterial(material.Nombre_material, contractData.Nombre_tecnico);
+      setContractData((prevData) => ({
+        ...prevData,
+        Stock: stock
+      }));
+    } catch (error) {
+      console.error("Error fetching stock by material:", error);
+      setContractData((prevData) => ({
+        ...prevData,
+        Stock: 0 
+      }));
+    }
+
     setFilteredMaterials([]); // Cierra la lista filtrada después de seleccionar un material
   };
 
@@ -94,8 +106,13 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = await submitContrato(contractData.Nombre_contrato, contractData.Nombre_material, contractData.Nombre_tecnico, contractData.Cantidad);
-    console.log(data);
+    try {
+      await submitContrato(contractData.Nombre_contrato, contractData.Nombre_material, contractData.Nombre_tecnico, contractData.Cantidad);
+      console.log("Contrato agregado y stock actualizado");
+      onClose();
+    } catch (error) {
+      console.error("Error al agregar contrato:", error);
+    }
   };
 
   if (!isOpen) return null;
@@ -126,11 +143,11 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
-            {filteredTechnicians && filteredTechnicians.length > 0 && (
+            {filteredTechnicians.length > 0 && (
               <ul className="mt-2 border border-gray-300 rounded-lg bg-white max-h-40 overflow-y-auto">
                 {filteredTechnicians.map((technician) => (
                   <li
-                    key={technician.id}
+                    key={technician.Id_tecnico}
                     onClick={() => handleTechnicianClick(technician)}
                     className="cursor-pointer px-3 py-2 hover:bg-gray-200"
                   >
@@ -150,11 +167,11 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
-            {filteredMaterials && filteredMaterials.length > 0 && (
+            {filteredMaterials.length > 0 && (
               <ul className="mt-2 border border-gray-300 rounded-lg bg-white max-h-40 overflow-y-auto">
                 {filteredMaterials.map((material) => (
                   <li
-                    key={material.id}
+                    key={material.Id_stocksistema}
                     onClick={() => handleMaterialClick(material)}
                     className="cursor-pointer px-3 py-2 hover:bg-gray-200"
                   >

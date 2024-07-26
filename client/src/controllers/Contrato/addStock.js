@@ -40,7 +40,7 @@ export const getTechnicians = async () => {
 // Función para obtener el stock por material en formato application/json
 export const getStockByMaterial = async (Nombre_material, Nombre_tecnico) => {
   try {
-    const response = await fetch('http://localhost:5000/stocktechnique/get-cantidad-stocktechnique', {
+    const response = await fetch('http://localhost:5000/stocktechnique/stock-by-name', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -53,6 +53,7 @@ export const getStockByMaterial = async (Nombre_material, Nombre_tecnico) => {
     }
 
     const data = await response.json();
+    console.log(data);
     return data.cantidad;
   } catch (error) {
     console.error('Error al obtener el stock por material:', error);
