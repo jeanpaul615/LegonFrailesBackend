@@ -13,7 +13,8 @@ const Stock = {
         Id_stocksistema: row.Id_stocksistema,
         Nombre_material: row.Nombre_material,
         Cantidad: row.Cantidad,
-        Estado: row.Estado
+        Estado: row.Estado,
+        Image_url: row.Image_url
       }));
 
       callback(null, stocks);

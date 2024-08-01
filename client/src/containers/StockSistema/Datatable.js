@@ -5,11 +5,14 @@ import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import ArticleDetailModal from './ArticleDetailModal';
 
-const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, ModalComponent, ModalUpdate, update }) => {
+const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, ModalComponent, ModalUpdate, update, tableName }) => {
   const [data, setData] = useState([]);
   const [isModalAddOpen, setIsModalAddOpen] = useState(false);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [isArticleDetailModalOpen, setIsArticleDetailModalOpen] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
 
   const tableRef = useRef(null);
@@ -34,31 +37,43 @@ const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, M
         dataTable.current.destroy(true);
       }
 
-      const columnsWithOptions = isAdmin ? [
+      const columnsWithOptions = [
         ...columns,
         {
           title: 'Opciones',
           data: null,
-          render: function (data, type, row) {
-            return '<button class="update-btn text-blue-600 hover:text-blue-900 font-bold">Actualizar</button>';
+          render: function () {
+            return `
+              ${tableName === 'datatableStockSistema' ? 
+                '<button class="detail-btn text-green-600 hover:text-green-900 font-bold">Ver</button>' : ''}
+              ${isAdmin ? 
+                '<button class="update-btn text-blue-600 hover:text-blue-900 font-bold">Actualizar</button>' : ''}
+            `;
           }
         }
-      ] : columns;
+      ];
 
       dataTable.current = $(tableRef.current).DataTable({
         data,
         columns: columnsWithOptions,
         paging: true,
         searching: true,
-        responsive: true,
         info: true,
         lengthMenu: [5, 10, 25, 50, 100, 1000],
         autoWidth: true
       });
 
+      // Click event to open article detail modal
+      $('#datatable').on('click', 'button.detail-btn', function () {
+        const row = dataTable.current.row($(this).parents('tr')).data();
+        setSelectedArticle(row);
+        setIsArticleDetailModalOpen(true);
+      });
+
       $('#datatable').on('click', 'button.update-btn', function () {
         const row = dataTable.current.row($(this).parents('tr')).data();
-        setSelectedRow(row);
+        const { Image_url, ...restRow } = row;
+        setSelectedRow(restRow);
         setIsModalUpdateOpen(true);
       });
 
@@ -68,7 +83,7 @@ const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, M
         }
       };
     }
-  }, [data, columns, isAdmin]);
+  }, [data, columns, isAdmin, tableName]);
 
   const handlePrintPDF = () => {
     const doc = new jsPDF();
@@ -96,6 +111,10 @@ const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, M
     setIsModalUpdateOpen(false);
   };
 
+  const handleCloseArticleDetailModal = () => {
+    setIsArticleDetailModalOpen(false);
+  };
+
   return (
     <div className="mx-auto mt-36 mb-8 px-4 md:px-8 md:pl-72 rounded-lg border-2 border-gray-300 p-4 overflow-hidden shadow-lg font-semibold text-left">
       <div className="mb-4 flex justify-between items-center">
@@ -120,20 +139,26 @@ const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, M
             {columns.map((column, index) => (
               <th key={index} scope="col">{column.title}</th>
             ))}
-            {isAdmin && <th scope="col">Opciones</th>}
+            <th scope="col">Opciones</th>
           </tr>
         </thead>
         <tbody>
           {data.map((item) => (
             <tr key={isAdmin ? item.Id_stocksistema : item.id}>
               {columns.map((column, colIndex) => (
-                <td key={`${isAdmin ? item.Id_stocksistema : item.id}-${colIndex}`}>{item[column.data]}</td>
-              ))}
-              {isAdmin && (
-                <td>
-                  <button className="update-btn text-blue-600 hover:text-blue-900 font-bold">Actualizar</button>
+                <td key={`${isAdmin ? item.Id_stocksistema : item.id}-${colIndex}`}
+                    className={column.data === 'Nombre_material' || column.data === 'id' ? 'name-cell cursor-pointer' : ''}>
+                  {item[column.data]}
                 </td>
-              )}
+              ))}
+              <td>
+                {tableName === 'datatableStockSistema' && (
+                  <button className="detail-btn text-green-600 hover:text-green-900 font-bold">Ver</button>
+                )}
+                {isAdmin && (
+                  <button className="update-btn text-blue-600 hover:text-blue-900 font-bold">Actualizar</button>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -154,6 +179,12 @@ const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, M
           update={update}
         />
       )}
+
+      <ArticleDetailModal
+        isOpen={isArticleDetailModalOpen}
+        onClose={handleCloseArticleDetailModal}
+        article={selectedArticle}
+      />
     </div>
   );
 };

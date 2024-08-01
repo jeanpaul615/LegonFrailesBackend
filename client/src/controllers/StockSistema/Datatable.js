@@ -5,6 +5,7 @@ export const fetchStocks = async () => {
   try {
     const response = await axios.get('http://localhost:5000/stock/get-stocksistema');
     const filteredResponse = response.data.filter(stock => stock.Cantidad > 0); // Filtrar datos correctos
+    console.log(filteredResponse);
     return filteredResponse; // Retorna los datos filtrados
   } catch (error) {
     console.error('Error al obtener los stocks:', error);

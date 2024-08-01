@@ -29,7 +29,7 @@ const EntreSedesTable = () => {
         columns={columns}
         fetchData={fetchTraslado}
         ModalComponent={ModaltoAdd} 
-        title="TRASLADO ENTRE SEDES"
+        title="PRESTAMO ENTRE SEDES"
         isAdmin={false}
         TextoButton="Registrar Nuevo Traslado Entre Sedes"
       />

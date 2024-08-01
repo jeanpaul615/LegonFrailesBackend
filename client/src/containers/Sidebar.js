@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ModaltoAdd from './StockSistema/ModaltoAdd';
+import ModaltoAdd from "./StockSistema/ModaltoAdd";
 import legonbanner from "../assets/legon_banner.png";
 import leon_legon from "../assets/leon_legon.png";
 
@@ -25,7 +25,7 @@ function Sidebar() {
   };
   const handleLogout = () => {
     localStorage.removeItem("token");
-  }
+  };
   return (
     <div className="fixed top-0 left-0 z-40 w-full">
       <div className="border-white border-b-2 bg-slate-800 h-20 items-center flex">
@@ -37,12 +37,12 @@ function Sidebar() {
           />
         </a>
         <div className="mt-36 md:ml-96 md:pl-32">
-
-        <button 
-         onClick={openModal}
-         className="md:fixed flex justify-left items-left top-4 right-4 mt-2 bg-amber-500 hover:bg-gray-700 text-white font-bold py-1 px-4 rounded">
-          AGREGAR MATERIAL NUEVO
-        </button>
+          <button
+            onClick={openModal}
+            className="md:fixed flex justify-left items-left top-4 right-4 mt-2 bg-amber-500 hover:bg-gray-700 text-white font-bold py-1 px-4 rounded"
+          >
+            AGREGAR MATERIAL NUEVO
+          </button>
         </div>
         <div className="flex-1 flex justify-end pr-5">
           <button
@@ -75,12 +75,20 @@ function Sidebar() {
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-slate-800">
           <ul className="space-y-2 font-medium">
-          <li>
+            <li>
               <a
                 href="/agregarinventario"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
-                <svg className="pr-2 h-5 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#fac003" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
+                <svg
+                  className="pr-2 h-5 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 448 512"
+                >
+                  <path
+                    fill="#fac003"
+                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                  />
                 </svg>
                 <span className="flex-1 ms-1 whitespace-nowrap text-yellow-400">
                   Agregar Materiales
@@ -151,7 +159,7 @@ function Sidebar() {
                     href="/entresedes"
                     className="flex items-center p-2 text-gray-900 rounded-lg italic dark:text-white hover:bg-gray-100 hover:text-black bg-gray-700 group"
                   >
-                    Entre Sedes
+                    Prestamo Entre Sedes
                   </a>
                 </li>
               </ul>
@@ -181,7 +189,16 @@ function Sidebar() {
                 href="/devoluciones"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
-               <svg className="h-4 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="#ffffff" d="M48.5 224L40 224c-13.3 0-24-10.7-24-24L16 72c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2L98.6 96.6c87.6-86.5 228.7-86.2 315.8 1c87.5 87.5 87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3c-62.2-62.2-162.7-62.5-225.3-1L185 183c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8L48.5 224z"/></svg>
+                <svg
+                  className="h-4 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 512 512"
+                >
+                  <path
+                    fill="#ffffff"
+                    d="M48.5 224L40 224c-13.3 0-24-10.7-24-24L16 72c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2L98.6 96.6c87.6-86.5 228.7-86.2 315.8 1c87.5 87.5 87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3c-62.2-62.2-162.7-62.5-225.3-1L185 183c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8L48.5 224z"
+                  />
+                </svg>
                 <span className="flex-1 ms-3 whitespace-nowrap">
                   Devoluciones
                 </span>
@@ -205,6 +222,22 @@ function Sidebar() {
                 <span className="flex-1 ms-3 whitespace-nowrap">
                   Tecnicos Registrados
                 </span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/factura"
+                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              >
+                <svg 
+                className="h-4 w-5"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                  <path
+                    fill="#ffffff"
+                    d="M0 112.5L0 422.3c0 18 10.1 35 27 41.3c87 32.5 174 10.3 261-11.9c79.8-20.3 159.6-40.7 239.3-18.9c23 6.3 48.7-9.5 48.7-33.4l0-309.9c0-18-10.1-35-27-41.3C462 15.9 375 38.1 288 60.3C208.2 80.6 128.4 100.9 48.7 79.1C25.6 72.8 0 88.6 0 112.5zM288 352c-44.2 0-80-43-80-96s35.8-96 80-96s80 43 80 96s-35.8 96-80 96zM64 352c35.3 0 64 28.7 64 64l-64 0 0-64zm64-208c0 35.3-28.7 64-64 64l0-64 64 0zM512 304l0 64-64 0c0-35.3 28.7-64 64-64zM448 96l64 0 0 64c-35.3 0-64-28.7-64-64z"
+                  />
+                </svg>
+                <span className="flex-1 ms-3 whitespace-nowrap">Facturas</span>
               </a>
             </li>
             <li>
@@ -242,8 +275,6 @@ function Sidebar() {
       </aside>
       <ModaltoAdd isOpen={isModalOpen} onClose={closeModal} />
     </div>
-    
-    
   );
 }
 
