@@ -8,7 +8,9 @@ import ModalUpdate from '../../containers/StockSistema/ModalUpdateStock';
 // Configuración de las columnas, incluyendo el formateo de la fecha
 const columns = [
   { title: 'ID', data: 'Id_factura' },
-  { title: 'Nombre de Factura', data: 'Nombre_factura' },
+  { title: 'Codigo', data: 'Codigo_factura' },
+  { title: 'Proveedor ', data: 'Proveedor_factura' },
+  { title: 'Observacion de Factura', data: 'Observacion_factura' },
   { title: 'Valor de Factura', data: 'Valor_factura' },
   { 
     title: 'Fecha de Factura', 

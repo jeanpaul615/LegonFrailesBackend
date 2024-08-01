@@ -13,13 +13,13 @@ const SalesCheckController = {
   },
 
   addStock: (req, res) => {
-    const { Nombre_factura,Valor_factura, Fecha_factura } = req.body;
+    const { Codigo_factura, Proveedor_factura,Observacion_factura,Valor_factura, Fecha_factura } = req.body;
 
-    if (!Nombre_factura || !Valor_factura || !Fecha_factura) {
-      return res.status(400).json({ error: 'Los campos Nombre_factura,Valor_factura y Fecha_factura son requeridos.' });
+    if (!Codigo_factura, !Proveedor_factura, !Observacion_factura || !Valor_factura || !Fecha_factura) {
+      return res.status(400).json({ error: 'Los campos Observacion_factura,Valor_factura y Fecha_factura son requeridos.' });
     }
     
-    Stock.addStocks(Nombre_factura,Valor_factura, Fecha_factura, (err, result) => {
+    Stock.addStocks(Codigo_factura,Proveedor_factura, Observacion_factura,Valor_factura, Fecha_factura, (err, result) => {
       if (err) {
         console.error('Error al agregar stock:', err);
         res.status(500).json({ error: 'Error en el servidor' });

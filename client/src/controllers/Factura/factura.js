@@ -11,10 +11,12 @@ export const fetchFactura = async () => {
   }
 };
 
-export const AddFactura = async (Nombre_factura,Valor_factura, Fecha_factura) => {
+export const AddFactura = async (Codigo_factura,Proveedor_factura,Observacion_factura,Valor_factura, Fecha_factura) => {
   try {
     const response = await axios.post('http://localhost:5000/facturas/add-factura', {
-      Nombre_factura,
+    Codigo_factura,
+    Proveedor_factura,
+    Observacion_factura,
      Valor_factura,
       Fecha_factura
     });

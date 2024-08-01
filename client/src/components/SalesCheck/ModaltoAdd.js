@@ -3,7 +3,9 @@ import { AddFactura } from "../../controllers/Factura/factura";
 
 const ModaltoAdd = ({ isOpen, onClose }) => {
   const [materialData, setMaterialData] = useState({
-    Nombre_factura: "",
+    Codigo_factura:"",
+    Proveedor_factura: "",
+    Observacion_factura: "",
     Valor_factura: 0,
     Fecha_factura: ""
   });
@@ -11,8 +13,8 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { Nombre_factura, Valor_factura,Fecha_factura } = materialData;
-      const response = await AddFactura(Nombre_factura,Valor_factura,Fecha_factura);
+      const { Codigo_factura, Proveedor_factura, Observacion_factura, Valor_factura,Fecha_factura } = materialData;
+      const response = await AddFactura(Codigo_factura, Proveedor_factura, Observacion_factura,Valor_factura,Fecha_factura);
       console.log("Operación exitosa:", response);
       onClose(); // Cierra el modal después de agregar
     } catch (error) {
