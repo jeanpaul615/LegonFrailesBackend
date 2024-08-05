@@ -59,7 +59,7 @@ const DatatableContainer = ({ columns, fetchData, title, isAdmin, TextoButton, M
         paging: true,
         searching: true,
         info: true,
-        lengthMenu: [5, 10, 25, 50, 100, 1000],
+        lengthMenu: [1000,100,50,25,10,5],
         autoWidth: true
       });
 

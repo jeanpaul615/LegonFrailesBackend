@@ -40,11 +40,33 @@ const ModaltoAdd = ({ isOpen, onClose }) => {
         <h2 className="text-2xl font-bold mb-4 text-gray-800">Agregar Materiales</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block mb-2 text-sm font-medium text-gray-700">Nombre de Factura</label>
+            <label className="block mb-2 text-sm font-medium text-gray-700">Codigo de Factura</label>
             <input
               type="text"
-              name="Nombre_factura"
-              value={materialData.Nombre_factura}
+              name="Codigo_factura"
+              value={materialData.Codigo_factura}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2 text-sm font-medium text-gray-700">Proveedor de Factura</label>
+            <input
+              type="text"
+              name="Proveedor_factura"
+              value={materialData.Proveedor_factura}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2 text-sm font-medium text-gray-700">Observacion de Factura</label>
+            <input
+              type="text"
+              name="Observacion_factura"
+              value={materialData.Observacion_factura}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required

@@ -27,7 +27,7 @@ const Stock = {
       return callback('Faltan campos requeridos', null);
     }
 
-    const query = 'INSERT INTO facturas(Codigo_factura, Proveedor_factura,Observacion_factura, Valor_factura, Fecha_factura) VALUES (?, ?, ?)';
+    const query = 'INSERT INTO facturas(Codigo_factura, Proveedor_factura,Observacion_factura, Valor_factura, Fecha_factura) VALUES (?, ?, ?, ?, ?)';
     db.query(query, [Codigo_factura, Proveedor_factura, Observacion_factura, Valor_factura, Fecha_factura], (err, result) => {
       if (err) {
         console.error('Error al insertar factura:', err);
