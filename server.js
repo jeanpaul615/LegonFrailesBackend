@@ -4,7 +4,7 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const app = express();
-const port = 5000;
+const port = 3306;
 const db = require('./src/config/connection'); // Asegúrate de que la ruta es correcta
 
 // Middleware
