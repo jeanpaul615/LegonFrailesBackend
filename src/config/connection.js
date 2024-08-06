@@ -1,14 +1,15 @@
 const mysql = require('mysql');
+require('dotenv').config(); // Cargar las variables de entorno desde el archivo .env
 
 let connection;
 
 function handleDisconnect() {
     connection = mysql.createConnection({
-        host: '148.113.168.53',
-        user: 'legonfra_JeanPaulPuerta',
-        password: 'Allison2012@615',
-        database: 'legonfra_legon',
-        connectTimeout: 10000 // tiempo de espera en milisegundos
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        connectTimeout: parseInt(process.env.DB_TIMEOUT, 10) // Convertir el tiempo de espera a número entero
     });
 
     connection.connect(function(err) {
