@@ -4,8 +4,10 @@ const connection = mysql.createConnection({
     host: '148.113.168.53',
     user: 'legonfra_JeanPaulPuerta',
     password: 'Allison2012@615',
-    database: 'legonfra_legon'
+    database: 'legonfra_legon',
+    connectTimeout: 10000 // tiempo de espera en milisegundos
 });
+
 
 connection.connect((err) => {
     if (err) {
