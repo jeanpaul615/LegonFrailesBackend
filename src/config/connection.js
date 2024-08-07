@@ -10,7 +10,7 @@ const pool = mysql.createPool({
 });
 
 // Función para obtener una conexión del pool
-const getConnection = (callback) => {
+const connection = (callback) => {
     pool.getConnection((err, connection) => {
         if (err) {
             console.error('Error obteniendo conexión del pool:', err.stack);
@@ -23,5 +23,5 @@ const getConnection = (callback) => {
 
 // Exportar la función para obtener conexiones del pool
 module.exports = {
-    getConnection
+    connection
 };
