@@ -1,18 +1,27 @@
 const mysql = require('mysql');
 
-const connection = mysql.createConnection({
+// Crear un pool de conexiones
+const pool = mysql.createPool({
+    connectionLimit: 10, // Número máximo de conexiones en el pool
     host: '148.113.168.53',
     user: 'legonfra_JeanPaulPuerta',
     password: 'Allison2012@615',
     database: 'legonfra_legon'
 });
 
-connection.connect((err) => {
-    if (err) {
-        console.error('Error conectando a la base de datos:', err.stack);
-        return;
-    }
-    console.log('Conectado a la base de datos con id', connection.threadId);
-});
+// Función para obtener una conexión del pool
+const getConnection = (callback) => {
+    pool.getConnection((err, connection) => {
+        if (err) {
+            console.error('Error obteniendo conexión del pool:', err.stack);
+            callback(err, null);
+        } else {
+            callback(null, connection);
+        }
+    });
+};
 
-module.exports = connection;
+// Exportar la función para obtener conexiones del pool
+module.exports = {
+    getConnection
+};
